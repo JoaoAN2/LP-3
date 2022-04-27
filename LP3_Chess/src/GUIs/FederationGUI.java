@@ -189,6 +189,7 @@ public class FederationGUI extends JDialog {
                 tfSiglaFederation.setEnabled(true);
                 tfSiglaFederation.setEditable(true);
                 tfSiglaFederation.requestFocus();
+                
                 clear();
                 disabled();
 
@@ -204,10 +205,11 @@ public class FederationGUI extends JDialog {
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
                 btnList.setVisible(false);
+                btnUpdate.setVisible(false);
                 tfNameFederation.requestFocus();
                 tfSiglaFederation.setEditable(false);
                 enabled();
-
+                  
                 action = "update";
             }
         });
@@ -278,6 +280,7 @@ public class FederationGUI extends JDialog {
                 tfSiglaFederation.setEnabled(true);
                 tfSiglaFederation.setEditable(true);
 
+                clear();
                 disabled();
 
                 btnCreate.setVisible(false);

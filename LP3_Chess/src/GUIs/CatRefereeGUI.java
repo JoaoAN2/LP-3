@@ -202,6 +202,7 @@ public class CatRefereeGUI extends JDialog {
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
                 btnList.setVisible(false);
+                btnUpdate.setVisible(false);
                 tfNameCatReferee.requestFocus();
                 tfSiglaCatReferee.setEditable(false);
                 enabled();
@@ -276,6 +277,7 @@ public class CatRefereeGUI extends JDialog {
                 tfSiglaCatReferee.setEnabled(true);
                 tfSiglaCatReferee.setEditable(true);
 
+                clear();
                 disabled();
 
                 btnCreate.setVisible(false);

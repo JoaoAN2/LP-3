@@ -205,6 +205,7 @@ public class TitleGUI extends JDialog {
                 tfNameTitle.requestFocus();
                 tfSiglaTitle.setEditable(false);
                 enabled();
+                btnUpdate.setVisible(false);
 
                 action = "update";
             }
@@ -277,6 +278,7 @@ public class TitleGUI extends JDialog {
                 tfSiglaTitle.setEditable(true);
 
                 disabled();
+                clear();
 
                 btnCreate.setVisible(false);
                 btnUpdate.setVisible(false);

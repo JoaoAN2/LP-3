@@ -202,6 +202,7 @@ public class GenderGUI extends JDialog {
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
                 btnList.setVisible(false);
+                btnUpdate.setVisible(false);
                 tfFullGender.requestFocus();
                 tfSiglaGender.setEditable(false);
                 enabled();
@@ -276,6 +277,7 @@ public class GenderGUI extends JDialog {
                 tfSiglaGender.setEnabled(true);
                 tfSiglaGender.setEditable(true);
 
+                clear();
                 disabled();
 
                 btnCreate.setVisible(false);
