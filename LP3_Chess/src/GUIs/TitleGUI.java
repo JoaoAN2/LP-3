@@ -23,12 +23,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
- /**
+/**
  * @author JoaoAN2 27/04/2022 - 09:49:29
  */
-
 public class TitleGUI extends JDialog {
-    
+
     Title title = new Title();
     DAOTitle DAOTitle = new DAOTitle();
     String action;
@@ -37,9 +36,9 @@ public class TitleGUI extends JDialog {
     JPanel pnNorth = new JPanel();
     JPanel pnSouth = new JPanel();
     JPanel pnCenter = new JPanel();
-    JPanel pnList = new JPanel(new GridLayout(1,1));
+    JPanel pnList = new JPanel(new GridLayout(1, 1));
 
-    String[] col = new String[]{"SiglaTitle", "NameTitle"};
+    String[] col = new String[]{"Sigla título", "Nome do título"};
     String[][] data = new String[0][col.length];
     DefaultTableModel model = new DefaultTableModel(data, col);
 
@@ -55,10 +54,10 @@ public class TitleGUI extends JDialog {
     JButton btnList = new JButton("Listar");
     JButton btnCancel = new JButton("Cancelar");
 
-    JLabel lbSiglaTitle = new JLabel("SiglaTitle");
+    JLabel lbSiglaTitle = new JLabel("Sigla título");
     JTextField tfSiglaTitle = new JTextField(3);
 
-    JLabel lbNameTitle = new JLabel("NameTitle");
+    JLabel lbNameTitle = new JLabel("Nome do título");
     JTextField tfNameTitle = new JTextField(45);
 
     private List<Title> list = new ArrayList<>();
@@ -74,7 +73,6 @@ public class TitleGUI extends JDialog {
     public void disabled() {
         tfNameTitle.setEditable(false);
     }
-
 
     public TitleGUI() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -125,23 +123,30 @@ public class TitleGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 cardLayout.show(pnSouth, "warning");
-                title = DAOTitle.obter(tfSiglaTitle.getText());
-                if (title != null) {
-                    btnCreate.setVisible(false);
-                    btnUpdate.setVisible(true);
-                    btnDelete.setVisible(true);
 
-                    tfNameTitle.setText(title.getNameTitle());
+                if (tfSiglaTitle.getText().trim().length() == 2 || tfSiglaTitle.getText().trim().length() == 2) {
+                    title = DAOTitle.obter(tfSiglaTitle.getText());
+                    if (title != null) {
+                        btnCreate.setVisible(false);
+                        btnUpdate.setVisible(true);
+                        btnDelete.setVisible(true);
+
+                        tfNameTitle.setText(title.getNameTitle());
+                    } else {
+                        clear();
+                        btnCreate.setVisible(true);
+                        btnUpdate.setVisible(false);
+                        btnDelete.setVisible(false);
+                    }
                 } else {
-                    clear();
-                    btnCreate.setVisible(true);
-                    btnUpdate.setVisible(false);
-                    btnDelete.setVisible(false);
+                    JOptionPane.showMessageDialog(cp, "Insira uma sigla de 2 ou 3 caracteres!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
+                    tfSiglaTitle.selectAll();
+                    tfSiglaTitle.requestFocus();
                 }
             }
         });
 
-       btnCreate.addActionListener(new ActionListener() {
+        btnCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 tfNameTitle.requestFocus();
@@ -158,42 +163,43 @@ public class TitleGUI extends JDialog {
             }
         });
 
-       btnSave.addActionListener(new ActionListener() {
+        btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                Title oldTitle = title;
+                if (!tfNameTitle.getText().trim().equals("")) {
+                    if ("create".equals(action)) {
+                        title = new Title();
+                    }
 
-                if("create".equals(action)) {
-                    title =  new Title();
+                    title.setSiglaTitle(tfSiglaTitle.getText());
+                    title.setNameTitle(tfNameTitle.getText());
+
+                    if ("create".equals(action)) {
+                        DAOTitle.inserir(title);
+                    }
+
+                    if ("update".equals(action)) {
+                        DAOTitle.atualizar(title);
+                    }
+
+                    btnSearch.setVisible(true);
+                    btnList.setVisible(true);
+                    btnSave.setVisible(false);
+                    btnCancel.setVisible(false);
+                    btnDelete.setVisible(false);
+
+                    tfSiglaTitle.setEnabled(true);
+                    tfSiglaTitle.setEditable(true);
+                    tfSiglaTitle.requestFocus();
+                    clear();
+                    disabled();
+                } else {
+                    JOptionPane.showMessageDialog(cp, "Dados inseridos de maneira inválida!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
                 }
-
-                title.setSiglaTitle(tfSiglaTitle.getText());
-                title.setNameTitle(tfNameTitle.getText());
-
-                if("create".equals(action)){
-                    DAOTitle.inserir(title);
-                }
-
-                if("update".equals(action)){
-                    DAOTitle.atualizar(title);
-                }
-
-                btnSearch.setVisible(true);
-                btnList.setVisible(true);
-                btnSave.setVisible(false);
-                btnCancel.setVisible(false);
-                btnDelete.setVisible(false);
-
-                tfSiglaTitle.setEnabled(true);
-                tfSiglaTitle.setEditable(true);
-                tfSiglaTitle.requestFocus();
-                clear();
-                disabled();
-
             }
         });
 
-       btnUpdate.addActionListener(new ActionListener() {
+        btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -211,7 +217,7 @@ public class TitleGUI extends JDialog {
             }
         });
 
-       btnDelete.addActionListener(new ActionListener() {
+        btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -232,14 +238,14 @@ public class TitleGUI extends JDialog {
                 btnUpdate.setVisible(false);
                 btnCancel.setVisible(false);
 
-                if(response == JOptionPane.YES_OPTION) {
+                if (response == JOptionPane.YES_OPTION) {
                     DAOTitle.remover(title);
                 }
 
             }
         });
 
-       btnList.addActionListener(new ActionListener() {
+        btnList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -291,7 +297,7 @@ public class TitleGUI extends JDialog {
         });
 
         setModal(true);
-        setSize(600,250);
+        setSize(600, 250);
         setLocationRelativeTo(null);
         setVisible(true);
     }

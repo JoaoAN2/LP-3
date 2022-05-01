@@ -5,12 +5,15 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -33,6 +36,8 @@ public class CatReferee implements Serializable {
     @Basic(optional = false)
     @Column(name = "name_cat_referee")
     private String nameCatReferee;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "catRefereeIdReferee")
+    private List<Referee> refereeList;
 
     public CatReferee() {
     }
@@ -62,6 +67,14 @@ public class CatReferee implements Serializable {
         this.nameCatReferee = nameCatReferee;
     }
 
+    public List<Referee> getRefereeList() {
+        return refereeList;
+    }
+
+    public void setRefereeList(List<Referee> refereeList) {
+        this.refereeList = refereeList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -84,7 +97,7 @@ public class CatReferee implements Serializable {
 
     @Override
     public String toString() {
-        return  siglaCatReferee + ";" + nameCatReferee;
+        return siglaCatReferee + ";" + nameCatReferee;
     }
     
 }

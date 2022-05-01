@@ -5,12 +5,15 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -33,6 +36,10 @@ public class Federation implements Serializable {
     @Basic(optional = false)
     @Column(name = "name_federation")
     private String nameFederation;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "federationIdState")
+    private List<State> stateList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "federationSiglaPlayer")
+    private List<Player> playerList;
 
     public Federation() {
     }
@@ -62,6 +69,22 @@ public class Federation implements Serializable {
         this.nameFederation = nameFederation;
     }
 
+    public List<State> getStateList() {
+        return stateList;
+    }
+
+    public void setStateList(List<State> stateList) {
+        this.stateList = stateList;
+    }
+
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList = playerList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -84,7 +107,7 @@ public class Federation implements Serializable {
 
     @Override
     public String toString() {
-        return  siglaFederation + ";" + nameFederation;
+        return siglaFederation + ";" + nameFederation;
     }
     
 }

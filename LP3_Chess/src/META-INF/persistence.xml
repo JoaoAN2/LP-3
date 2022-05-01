@@ -6,6 +6,12 @@
     <class>Entidades.CatReferee</class>
     <class>Entidades.Title</class>
     <class>Entidades.Gender</class>
+    <class>Entidades.Tournaments</class>
+    <class>Entidades.Tournament</class>
+    <class>Entidades.Referee</class>
+    <class>Entidades.Player</class>
+    <class>Entidades.City</class>
+    <class>Entidades.State</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/chess?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

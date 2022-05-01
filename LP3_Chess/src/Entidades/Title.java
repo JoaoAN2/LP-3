@@ -5,12 +5,15 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -33,6 +36,8 @@ public class Title implements Serializable {
     @Basic(optional = false)
     @Column(name = "sigla_title")
     private String siglaTitle;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "titleSiglaPlayer")
+    private List<Player> playerList;
 
     public Title() {
     }
@@ -62,6 +67,14 @@ public class Title implements Serializable {
         this.siglaTitle = siglaTitle;
     }
 
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList = playerList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -84,7 +97,7 @@ public class Title implements Serializable {
 
     @Override
     public String toString() {
-        return siglaTitle + ";" + nameTitle;
+        return  siglaTitle + ";" + nameTitle;
     }
     
 }

@@ -5,12 +5,15 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -33,6 +36,8 @@ public class Gender implements Serializable {
     @Basic(optional = false)
     @Column(name = "full_gender")
     private String fullGender;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "genderSiglaPlayer")
+    private List<Player> playerList;
 
     public Gender() {
     }
@@ -60,6 +65,14 @@ public class Gender implements Serializable {
 
     public void setFullGender(String fullGender) {
         this.fullGender = fullGender;
+    }
+
+    public List<Player> getPlayerList() {
+        return playerList;
+    }
+
+    public void setPlayerList(List<Player> playerList) {
+        this.playerList = playerList;
     }
 
     @Override
