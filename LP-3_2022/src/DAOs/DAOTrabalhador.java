@@ -1,6 +1,7 @@
 package DAOs;
 
 import Entidades.Trabalhador;
+import GUIs.TrabalhadorGUI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class DAOTrabalhador extends DAOGenerico<Trabalhador> {
     public static void main(String[] args) {
         DAOTrabalhador daoTrabalhador = new DAOTrabalhador();
         List<Trabalhador> listaTrabalhador = daoTrabalhador.list();
+        TrabalhadorGUI trabalhadorGUI = new TrabalhadorGUI();
         for (Trabalhador trabalhador : listaTrabalhador) {
             System.out.println(trabalhador);
         }

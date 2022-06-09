@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
  /**
- * @author JoaoAN2 15/05/2022 - 19:27:26
+ * @author JoaoAN2 16/05/2022 - 10:20:38
  */
 
 public class TrabalhadorGUI extends JDialog {
