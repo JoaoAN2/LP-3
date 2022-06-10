@@ -108,8 +108,8 @@ class GUI extends JFrame {
                 boolean test = true;
                 if (test) {
                     jdbc.setHostName("localhost");
-                    jdbc.setUserName("root");
-                    jdbc.setPassword("2na7N#tU");
+                    jdbc.setUserName("joaoan2");
+                    jdbc.setPassword("joaopassword");
                     jdbc.setJdbcDriver("com.mysql.cj.jdbc.Driver");
                     jdbc.setDataBaseName("chess");
                     jdbc.setDataBasePrefix("jdbc:mysql://");
