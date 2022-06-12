@@ -1,5 +1,6 @@
 package Main;
 
+import Entidades.Atribute;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
 import java.text.SimpleDateFormat;
@@ -11,11 +12,10 @@ import java.util.List;
  * @author JoaoAN2
  */
 class GeradorDeGUI {
-    
-    GeradorDeGUI(String className, List<String> atributos) {
-        StringTools stringTools = new StringTools();
-        String classNameMin = stringTools.firstLetterToLowerCase(className);
-        String[] aux;
+
+    GeradorDeGUI(String className, List<Atribute> atributos) {
+        StringTools st = new StringTools();
+        String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList(); // Código gerado
 
         cg.add("package GUIs;\n");
@@ -44,20 +44,21 @@ class GeradorDeGUI {
                 + "import javax.swing.JScrollPane;\n"
                 + "import javax.swing.JTable;\n"
                 + "import javax.swing.JTextField;\n"
-                + "import javax.swing.table.DefaultTableModel;"
+                + "import javax.swing.table.DefaultTableModel;\n"
+                + "import Tools.DateTools;"
         );
 
         cg.add("\n /**\n * @author JoaoAN2 " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date()) + "\n */\n");
         cg.add("public class " + className + "GUI extends JDialog {\n"
                 + "    " + className + " " + classNameMin + " = new " + className + "();\n"
                 + "    DAO" + className + " dao" + className + " = new DAO" + className + "();\n"
+                + "    DateTools dt = new DateTools();\n"
                 + "    String action;\n"
         );
 
         String parametroColunas = "";
         for (int i = 0; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            parametroColunas += "\"" + stringTools.firstLetterToUpperCase(aux[1]) + "\", ";
+            parametroColunas += "\"" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "\", ";
         }
         parametroColunas = parametroColunas.substring(0, parametroColunas.length() - 2);
 
@@ -86,9 +87,8 @@ class GeradorDeGUI {
 
         // Labels e TextFields
         for (int i = 0; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            cg.add("    JLabel lb" + stringTools.firstLetterToUpperCase(aux[1]) + " = new JLabel(\"" + stringTools.firstLetterToUpperCase(aux[1]) + "\");\n"
-                    + "    JTextField tf" + stringTools.firstLetterToUpperCase(aux[1]) + " = new JTextField(" + aux[2] + ");\n"
+            cg.add("    JLabel lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JLabel(\"" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "\");\n"
+                    + "    JTextField tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JTextField(" + atributos.get(i).getSize() + ");\n"
             );
         }
 
@@ -97,22 +97,19 @@ class GeradorDeGUI {
         // Funções
         cg.add("    public void clear() {");
         for (int i = 1; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            cg.add("        tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setText(\"\");");
+            cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(\"\");");
         }
         cg.add("    }\n");
 
         cg.add("    public void enabled() {");
         for (int i = 1; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            cg.add("        tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEditable(true);");
+            cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(true);");
         }
         cg.add("    }\n");
 
         cg.add("    public void disabled() {");
         for (int i = 1; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            cg.add("        tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEditable(false);");
+            cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(false);");
         }
         cg.add("    }\n");
 
@@ -122,7 +119,7 @@ class GeradorDeGUI {
                 + "        cp = getContentPane();\n"
                 + "        cp.setLayout(new BorderLayout());\n"
                 + "        setTitle(\"CRUD - " + className + "\");\n\n"
-                + "        pnCenter.setLayout(new GridLayout("+ (atributos.size() - 1) +", col.length - 1));\n"
+                + "        pnCenter.setLayout(new GridLayout(" + (atributos.size() - 1) + ", col.length - 1));\n"
                 + "        pnNorth.setLayout(new FlowLayout(FlowLayout.LEFT));\n"
                 + "\n"
                 + "        cp.add(pnNorth, BorderLayout.NORTH);\n"
@@ -132,8 +129,8 @@ class GeradorDeGUI {
                 + "        pnNorth.setBackground(Color.cyan);\n"
                 + "        pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));\n"
                 + "\n"
-                + "        pnNorth.add(lb" + stringTools.firstLetterToUpperCase(atributos.get(0).split(";")[1]) + ");\n"
-                + "        pnNorth.add(tf" + stringTools.firstLetterToUpperCase(atributos.get(0).split(";")[1]) + ");\n"
+                + "        pnNorth.add(lb" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ");\n"
+                + "        pnNorth.add(tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ");\n"
                 + "        pnNorth.add(btnSearch);\n"
                 + "        pnNorth.add(btnList);\n"
                 + "        pnNorth.add(btnCreate);\n"
@@ -151,9 +148,8 @@ class GeradorDeGUI {
                 + "        disabled();\n");
 
         for (int i = 1; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            cg.add("        pnCenter.add(lb" + stringTools.firstLetterToUpperCase(aux[1]) + ");\n"
-                    + "        pnCenter.add(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ");\n"
+            cg.add("        pnCenter.add(lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ");\n"
+                    + "        pnCenter.add(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ");\n"
             );
         }
 
@@ -170,37 +166,38 @@ class GeradorDeGUI {
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n"
                 + "                cardLayout.show(pnSouth, \"warning\");");
-        
-        aux = atributos.get(0).split(";");
-        switch (aux[0]) {
+
+        switch (atributos.get(0).getTypeJava()) {
             case "String":
-                cg.add("                " + classNameMin + " = dao" + className + ".obter(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText());");
+                cg.add("                " + classNameMin + " = dao" + className + ".obter(tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".getText());");
                 break;
             case "int":
-                cg.add("                " + classNameMin + " = dao" + className + ".obter(Integer.valueOf(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText()));");
+                cg.add("                " + classNameMin + " = dao" + className + ".obter(Integer.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".getText()));");
                 break;
             default:
-                cg.add("                " + classNameMin + " = dao" + className + ".obter(ErroDeTipagem.valueOf(tf" + stringTools.firstLetterToUpperCase(aux[1]) + "));");
+                cg.add("                " + classNameMin + " = dao" + className + ".obter(ErroDeTipagem.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + "));");
         }
-        
+
         cg.add("                if (" + classNameMin + " != null) {\n"
                 + "                    btnCreate.setVisible(false);\n"
                 + "                    btnUpdate.setVisible(true);\n"
                 + "                    btnDelete.setVisible(true);\n"
         );
-        
-        for(int i = 1; i < atributos.size(); i++){
-            aux = atributos.get(i).split(";");
-            switch (aux[0]){
+
+        for (int i = 1; i < atributos.size(); i++) {
+            switch (atributos.get(i).getTypeJava()) {
                 case "String":
-                    cg.add("                    tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setText(" + classNameMin + ".get" + stringTools.firstLetterToUpperCase(aux[1]) + "());");
+                    cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "());");
+                    break;
+                case "Date":
+                    cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(dt.conversionDateToString(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "()));");
                     break;
                 default:
-                    cg.add("                    tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setText(String.valueOf(" + classNameMin + ".get" + stringTools.firstLetterToUpperCase(aux[1]) + "()));");
+                    cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(String.valueOf(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "()));");
                     break;
             }
         }
-        
+
         cg.add("                } else {\n"
                 + "                    clear();\n"
                 + "                    btnCreate.setVisible(true);\n"
@@ -208,34 +205,32 @@ class GeradorDeGUI {
                 + "                    btnDelete.setVisible(false);\n"
                 + "                }"
         );
-        
+
         cg.add("            }"); // Action
         cg.add("        });\n"); // Listener
-        
+
         // FIM BUSCAR
-        
         // Adicionar
-        aux = atributos.get(0).split(";");
         cg.add("       btnCreate.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(atributos.get(1).split(";")[1]) + ".requestFocus();\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEnabled(false);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(1).getNameJava()) + ".requestFocus();\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEnabled(false);\n"
                 + "                enabled();\n"
                 + "\n"
                 + "                btnSearch.setVisible(false);\n"
-                + "                btnCreate.setVisible(false);\n" 
-                + "                btnSave.setVisible(true);\n" 
+                + "                btnCreate.setVisible(false);\n"
+                + "                btnSave.setVisible(true);\n"
                 + "                btnCancel.setVisible(true);\n"
                 + "                btnList.setVisible(false);\n"
                 + "\n"
                 + "                action = \"create\";"
         );
-        
+
         cg.add("            }"); // Action
         cg.add("        });\n"); // Listener
         // FIM ADICIONAR
-        
+
         // Salvar
         cg.add("       btnSave.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
@@ -244,78 +239,77 @@ class GeradorDeGUI {
                 + "                    " + classNameMin + " =  new " + className + "();\n"
                 + "                }\n"
         );
-        
-        for(int i = 0; i < atributos.size(); i++) {
-            aux = atributos.get(i).split(";");
-            switch(aux[0]){
+
+        for (int i = 0; i < atributos.size(); i++) {
+            switch (atributos.get(i).getTypeJava()) {
                 case "String":
-                    cg.add("                " + classNameMin + ".set" + stringTools.firstLetterToUpperCase(aux[1]) + "(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText());");
+                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText());");
                     break;
                 case "int":
-                    cg.add("                " + classNameMin + ".set" + stringTools.firstLetterToUpperCase(aux[1]) + "(Integer.valueOf(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText()));");
+                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Integer.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
                     break;
                 case "double":
-                    cg.add("                " + classNameMin + ".set" + stringTools.firstLetterToUpperCase(aux[1]) + "(Double.parseDouble(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText()));");
+                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Double.parseDouble(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
                     break;
                 case "Short":
-                    cg.add("                " + classNameMin + ".set" + stringTools.firstLetterToUpperCase(aux[1]) + "(Short.valueOf(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText()));");
+                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Short.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
                     break;
+                case "Date":
+                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(dt.conversionStringToDate(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+                    break;                    
                 default:
-                    cg.add("                " + classNameMin + ".set" + stringTools.firstLetterToUpperCase(aux[1]) + "("+ aux[0] +".valueOf(tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".getText()));");
+                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(" + atributos.get(i).getTypeJava() + ".valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
             }
         }
-        
+
         cg.add("\n                if(\"create\".equals(action)){\n"
                 + "                    dao" + className + ".inserir(" + classNameMin + ");\n"
                 + "                }");
-        
+
         cg.add("\n                if(\"update\".equals(action)){\n"
                 + "                    dao" + className + ".atualizar(" + classNameMin + ");\n"
                 + "                }\n");
-        
-        aux = atributos.get(0).split(";");
+
         cg.add("                btnSearch.setVisible(true);\n"
-                 + "                btnList.setVisible(true);\n"
-                 + "                btnSave.setVisible(false);\n"
-                 + "                btnCancel.setVisible(false);\n"
-                 + "                btnDelete.setVisible(false);\n"
-                 + "\n"
-                 + "                tf"+ stringTools.firstLetterToUpperCase(aux[1]) +".setEnabled(true);\n"
-                 + "                tf"+ stringTools.firstLetterToUpperCase(aux[1]) +".setEditable(true);\n"
-                 + "                tf"+ stringTools.firstLetterToUpperCase(aux[1]) +".requestFocus();\n"
-                 + "                clear();\n"
-                 + "                disabled();\n"
+                + "                btnList.setVisible(true);\n"
+                + "                btnSave.setVisible(false);\n"
+                + "                btnCancel.setVisible(false);\n"
+                + "                btnDelete.setVisible(false);\n"
+                + "\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEnabled(true);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEditable(true);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".requestFocus();\n"
+                + "                clear();\n"
+                + "                disabled();\n"
         );
-        
+
         cg.add("            }"); // Action
         cg.add("        });\n"); // Listener
         // FIM SALVAR
-        
+
         // Alterar
-        aux = atributos.get(0).split(";");
         cg.add("       btnUpdate.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n"
                 + "\n"
                 + "                btnSearch.setVisible(false);\n"
-                + "                btnCreate.setVisible(false);\n" 
-                + "                btnSave.setVisible(true);\n" 
+                + "                btnCreate.setVisible(false);\n"
+                + "                btnSave.setVisible(true);\n"
                 + "                btnCancel.setVisible(true);\n"
                 + "                btnList.setVisible(false);\n"
                 + "                btnUpdate.setVisible(false);\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(atributos.get(1).split(";")[1]) + ".requestFocus();\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEditable(false);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(1).getNameJava()) + ".requestFocus();\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEditable(false);\n"
                 + "                enabled();\n"
                 + "\n"
                 + "                action = \"update\";"
         );
-        
+
         cg.add("            }"); // Action
         cg.add("        });\n"); // Listener
         // FIM Alterar
-        
+
         // Excluir
-        aux = atributos.get(0).split(";");
         cg.add("       btnDelete.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n"
@@ -328,24 +322,24 @@ class GeradorDeGUI {
                 + "                        JOptionPane.QUESTION_MESSAGE\n"
                 + "                );"
                 + "\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEnabled(true);\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEditable(true);\n"
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".requestFocus();\n"                
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setText(\"\");\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEnabled(true);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEditable(true);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".requestFocus();\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setText(\"\");\n"
                 + "                clear();\n"
-                + "                disabled();\n" 
-                + "                btnDelete.setVisible(false);\n" 
-                + "                btnUpdate.setVisible(false);\n" 
+                + "                disabled();\n"
+                + "                btnDelete.setVisible(false);\n"
+                + "                btnUpdate.setVisible(false);\n"
                 + "                btnCancel.setVisible(false);\n\n"
                 + "                if(response == JOptionPane.YES_OPTION) {\n"
                 + "                    dao" + className + ".remover(" + classNameMin + ");\n"
                 + "                }\n"
         );
-        
+
         cg.add("            }"); // Action
         cg.add("        });\n"); // Listener
         // FIM EXCLUIR
-        
+
         // Listar
         cg.add("       btnList.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
@@ -372,42 +366,40 @@ class GeradorDeGUI {
                 + "                btnUpdate.setVisible(false);\n"
                 + "                btnDelete.setVisible(false);"
         );
-        
+
         cg.add("            }"); // Action
         cg.add("        });\n"); // Listener
-        
+
         // FIM LISTAR
-        
         // Cancelar
-        aux = atributos.get(0).split(";");
-        cg.add("        btnCancel.addActionListener(new ActionListener() {\n" 
-                + "            @Override\n" 
-                + "            public void actionPerformed(ActionEvent ae) {\n" 
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setText(\"\");\n" 
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".requestFocus();\n" 
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEnabled(true);\n" 
-                + "                tf" + stringTools.firstLetterToUpperCase(aux[1]) + ".setEditable(true);\n" 
-                + "\n" 
+        cg.add("        btnCancel.addActionListener(new ActionListener() {\n"
+                + "            @Override\n"
+                + "            public void actionPerformed(ActionEvent ae) {\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setText(\"\");\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".requestFocus();\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEnabled(true);\n"
+                + "                tf" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + ".setEditable(true);\n"
+                + "\n"
                 + "                disabled();\n"
-                + "                clear();\n" 
-                + "\n" 
-                + "                btnCreate.setVisible(false);\n" 
-                + "                btnUpdate.setVisible(false);\n" 
-                + "                btnDelete.setVisible(false);\n" 
-                + "                btnCancel.setVisible(false);\n" 
-                + "                btnSave.setVisible(false);\n" 
-                + "                btnSearch.setVisible(true);\n" 
-                + "                btnList.setVisible(true);\n" 
-                + "            }\n" 
+                + "                clear();\n"
+                + "\n"
+                + "                btnCreate.setVisible(false);\n"
+                + "                btnUpdate.setVisible(false);\n"
+                + "                btnDelete.setVisible(false);\n"
+                + "                btnCancel.setVisible(false);\n"
+                + "                btnSave.setVisible(false);\n"
+                + "                btnSearch.setVisible(true);\n"
+                + "                btnList.setVisible(true);\n"
+                + "            }\n"
                 + "        });\n");
         // FIM CANCELAR
-        
+
         // CONFIGURAÇÕES DA GUI
         cg.add("        setModal(true);\n"
                 + "        setSize(600,250);\n"
                 + "        setLocationRelativeTo(null);\n"
                 + "        setVisible(true);");
-        
+
         cg.add("    }"); // Fim construtor GUI
 
         cg.add("}"); // Fim da classe
@@ -417,7 +409,7 @@ class GeradorDeGUI {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.salvarArquivo("src/GUIs/" + className + "GUI.java", cg);
+        manipulaArquivo.salvarArquivo("/home/joaoan2/NetBeansProjects/TesteGerador/src/GUIs/" + className + "GUI.java", cg);
     }
-    
+
 }

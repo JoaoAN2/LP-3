@@ -1,14 +1,13 @@
 package Main;
 
+import Entidades.Atribute;
 import Tools.JDBC;
+import Tools.StringTools;
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,8 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,6 +55,26 @@ class GUI extends JFrame {
     JPanel pnLbDatabaseName = new JPanel();
 
     JButton btnConnectionTest = new JButton("Testar conexão");
+    JButton btnCancel = new JButton("Cancelar");
+    JButton btnGenerate = new JButton("Gerar Sistema");
+
+    StringTools st = new StringTools();
+
+    public void disabled() {
+        tfDatabaseName.setEditable(false);
+        tfHostName.setEditable(false);
+        tfPassword.setEditable(false);
+        tfPort.setEditable(false);
+        tfUserName.setEditable(false);
+    }
+
+    public void enable() {
+        tfDatabaseName.setEditable(true);
+        tfHostName.setEditable(true);
+        tfPassword.setEditable(true);
+        tfPort.setEditable(true);
+        tfUserName.setEditable(true);
+    }
 
     public GUI() {
         cp = getContentPane();
@@ -94,22 +115,26 @@ class GUI extends JFrame {
         pnWest.add(pnLbPassword);
         pnCenter.add(pnTfPassword);
 
-        pnSouth.add(btnConnectionTest);
         pnSouth.add(lbStatus);
+        pnSouth.add(btnConnectionTest);
+        pnSouth.add(btnCancel);
+        pnSouth.add(btnGenerate);
 
+        btnGenerate.setVisible(false);
+        btnCancel.setVisible(false);
+
+        JDBC jdbc = new JDBC();
         // Testando conexão
         btnConnectionTest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                JDBC jdbc = new JDBC();
                 System.out.println("Testando");
-                ResultSet res;
 
                 boolean test = true;
                 if (test) {
                     jdbc.setHostName("localhost");
-                    jdbc.setUserName("joaoan2");
-                    jdbc.setPassword("joaopassword");
+                    jdbc.setUserName("root");
+                    jdbc.setPassword("2na7N#tU");
                     jdbc.setJdbcDriver("com.mysql.cj.jdbc.Driver");
                     jdbc.setDataBaseName("chess");
                     jdbc.setDataBasePrefix("jdbc:mysql://");
@@ -126,17 +151,57 @@ class GUI extends JFrame {
 
                 Connection con = jdbc.getConnection();
                 if (con != null) {
-                    try {
-                        res = con.createStatement().executeQuery("desc player;");
-                        while (res.next()) {
-                            System.out.println("desc " + res.getString(5));
-                        }
-                        lbStatus.setText("BD \"" + jdbc.getDataBaseName() + "\" conectado com sucesso!");
-                    } catch (SQLException ex) {
-                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    lbStatus.setText("BD \"" + jdbc.getDataBaseName() + "\" conectado com sucesso!");
+                    btnConnectionTest.setVisible(false);
+                    btnCancel.setVisible(true);
+                    btnGenerate.setVisible(true);
+                    disabled();
                 } else {
                     lbStatus.setText("Dados inseridos de maneira inválida!");
+                }
+            }
+        });
+
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnConnectionTest.setVisible(true);
+                btnCancel.setVisible(false);
+                btnGenerate.setVisible(false);
+                enable();
+            }
+        });
+
+        btnGenerate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Connection con = jdbc.getConnection();
+                try {
+                    List<String> tables = new ArrayList();
+                    ResultSet rsTables = con.createStatement().executeQuery("SHOW TABLES;");
+                    while (rsTables.next()) {
+                        List<Atribute> atributes = new ArrayList();
+                        System.out.println("\n\nTabela: " + rsTables.getString(1));
+                        tables.add(rsTables.getString(1));
+                        ResultSet rsDesc = con.createStatement().executeQuery("DESC " + rsTables.getString(1));
+                        while (rsDesc.next()) {
+                            Atribute atribute = new Atribute();
+                            atribute.setNameJava(st.bdToJava(rsDesc.getString(1)));
+                            atribute.setTypeJava(st.convertTypeBDToJava(rsDesc.getString(2)));
+                            atribute.setNameBD(rsDesc.getString(1));
+                            atribute.setSize(st.sizeAtributes(rsDesc.getString(2)));
+                            atribute.setTypeBD(rsDesc.getString(2));
+                            atribute.setIsNull(rsDesc.getString(3).equals("YES"));
+                            atribute.setKey(rsDesc.getString(4));
+                            System.out.println(atribute.toString());
+                            atributes.add(atribute);
+                        }
+                        // GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
+                        // GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes);
+                        // GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes, rsTables.getString(1));
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
