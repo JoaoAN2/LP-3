@@ -11,19 +11,33 @@ import java.util.List;
 /**
  * @author JoaoAN2
  */
-class GeradorDeGUI {
+public class GeradorDeGUI {
 
-    GeradorDeGUI(String className, List<Atribute> atributos) {
+    public GeradorDeGUI(String className, List<Atribute> atributos) {
         StringTools st = new StringTools();
         String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList(); // Código gerado
+        boolean hasDate = false;
+        boolean hasFK = false;
 
         cg.add("package GUIs;\n");
 
         // Imports
         cg.add("import Entidades." + className + ";\n"
-                + "import DAOs.DAO" + className + ";\n"
-                + "import java.awt.BorderLayout;\n"
+                + "import DAOs.DAO" + className + ";\n");
+
+        for (int i = 0; i < atributos.size(); i++) {
+            if (atributos.get(i).getOriginTableFK() != null) {
+                cg.add("import Entidades." + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ";\n"
+                        + "import DAOs.DAO" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ";\n");
+                hasFK = true;
+            }
+            if (atributos.get(i).getTypeJava().equals("Date")) {
+                hasDate = true;
+            }
+        }
+
+        cg.add("import java.awt.BorderLayout;\n"
                 + "import java.awt.CardLayout;\n"
                 + "import java.awt.Color;\n"
                 + "import java.awt.Container;\n"
@@ -34,9 +48,8 @@ class GeradorDeGUI {
                 + "import java.util.ArrayList;\n"
                 + "import java.util.List;\n"
                 + "import javax.swing.BorderFactory;\n"
-                + "import javax.swing.DefaultComboBoxModel;\n"
                 + "import javax.swing.JButton;\n"
-                + "import javax.swing.JComboBox;\n"
+                + "import javax.swing.table.DefaultTableModel;\n"
                 + "import javax.swing.JDialog;\n"
                 + "import javax.swing.JLabel;\n"
                 + "import javax.swing.JOptionPane;\n"
@@ -44,17 +57,39 @@ class GeradorDeGUI {
                 + "import javax.swing.JScrollPane;\n"
                 + "import javax.swing.JTable;\n"
                 + "import javax.swing.JTextField;\n"
-                + "import javax.swing.table.DefaultTableModel;\n"
-                + "import Tools.DateTools;"
         );
 
+        if (hasFK) {
+            cg.add("import javax.swing.DefaultComboBoxModel;\n"
+                    + "import javax.swing.JComboBox;\n");
+        }
+        if (hasDate) {
+            cg.add("import Tools.DateTools;");
+        }
+
+        // Fim Imports
         cg.add("\n /**\n * @author JoaoAN2 " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date()) + "\n */\n");
         cg.add("public class " + className + "GUI extends JDialog {\n"
                 + "    " + className + " " + classNameMin + " = new " + className + "();\n"
                 + "    DAO" + className + " dao" + className + " = new DAO" + className + "();\n"
-                + "    DateTools dt = new DateTools();\n"
                 + "    String action;\n"
         );
+
+        if (hasDate) {
+            cg.add("    DateTools dt = new DateTools();\n");
+        }
+
+        if (hasFK) {
+            for (int i = 0; i < atributos.size(); i++) {
+                if (atributos.get(i).getOriginTableFK() != null) {
+                    cg.add(
+                            "    DAO" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + " dao" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + " = new DAO" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + "();\n"
+                            + "    DefaultComboBoxModel cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + "Model = new DefaultComboBoxModel();\n"
+                            + "    JComboBox cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + " = new JComboBox(cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + "Model);\n"
+                    );
+                }
+            }
+        }
 
         String parametroColunas = "";
         for (int i = 0; i < atributos.size(); i++) {
@@ -87,9 +122,11 @@ class GeradorDeGUI {
 
         // Labels e TextFields
         for (int i = 0; i < atributos.size(); i++) {
-            cg.add("    JLabel lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JLabel(\"" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "\");\n"
-                    + "    JTextField tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JTextField(" + atributos.get(i).getSize() + ");\n"
-            );
+            cg.add("    JLabel lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JLabel(\"" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "\");\n");
+
+            if (atributos.get(i).getOriginTableFK() == null) {
+                cg.add("    JTextField tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JTextField(" + atributos.get(i).getSize() + ");\n");
+            }
         }
 
         cg.add("    private List<" + className + "> list = new ArrayList<>();\n");
@@ -97,19 +134,29 @@ class GeradorDeGUI {
         // Funções
         cg.add("    public void clear() {");
         for (int i = 1; i < atributos.size(); i++) {
-            cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(\"\");");
+            if (atributos.get(i).getOriginTableFK() == null) {
+                cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(\"\");");
+            }
         }
         cg.add("    }\n");
 
         cg.add("    public void enabled() {");
         for (int i = 1; i < atributos.size(); i++) {
-            cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(true);");
+            if (atributos.get(i).getOriginTableFK() == null) {
+                cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(true);");
+            } else {
+                cg.add("        cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ".setEnabled(true);");
+            }
         }
         cg.add("    }\n");
 
         cg.add("    public void disabled() {");
         for (int i = 1; i < atributos.size(); i++) {
-            cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(false);");
+            if (atributos.get(i).getOriginTableFK() == null) {
+                cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(false);");
+            } else {
+                cg.add("        cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ".setEnabled(false);");
+            }
         }
         cg.add("    }\n");
 
@@ -148,8 +195,10 @@ class GeradorDeGUI {
                 + "        disabled();\n");
 
         for (int i = 1; i < atributos.size(); i++) {
+            String element = atributos.get(i).getOriginTableFK() == null ? "tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) : "cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK());
+
             cg.add("        pnCenter.add(lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ");\n"
-                    + "        pnCenter.add(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ");\n"
+                    + "        pnCenter.add(" + element + ");\n"
             );
         }
 
@@ -160,6 +209,15 @@ class GeradorDeGUI {
                 + "        pnSouth.setLayout(cardLayout);\n"
                 + "        pnSouth.add(pnEmpty, \"empty\");\n"
                 + "        pnSouth.add(pnList, \"list\");\n");
+
+        for (int i = 0; i < atributos.size(); i++) {
+            if (atributos.get(i).getOriginTableFK() != null) {
+                cg.add("        List<" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + "> " + atributos.get(i).getOriginTableFK() + "s = dao" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ".list();\n"
+                        + "        for (" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + " " + atributos.get(i).getOriginTableFK() + " : " + atributos.get(i).getOriginTableFK() + "s) {\n"
+                        + "            cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + "Model.addElement(" + atributos.get(i).getOriginTableFK() + ".toString().replace(\";\",\"-\"));\n"
+                        + "        }\n");
+            }
+        }
 
         // Buscar
         cg.add("        btnSearch.addActionListener(new ActionListener() {\n"
@@ -185,16 +243,25 @@ class GeradorDeGUI {
         );
 
         for (int i = 1; i < atributos.size(); i++) {
-            switch (atributos.get(i).getTypeJava()) {
-                case "String":
-                    cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "());");
-                    break;
-                case "Date":
-                    cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(dt.conversionDateToString(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "()));");
-                    break;
-                default:
-                    cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(String.valueOf(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "()));");
-                    break;
+            if (atributos.get(i).getOriginTableFK() == null) {
+                switch (atributos.get(i).getTypeJava()) {
+                    case "String":
+                        cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "());");
+                        break;
+                    case "Date":
+                        cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(dt.conversionDateToString(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "()));");
+                        break;
+                    default:
+                        cg.add("                    tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(String.valueOf(" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "()));");
+                        break;
+                }
+            } else {
+                cg.add("                    for (int i = 0; i < " + atributos.get(i).getOriginTableFK() + "s.size(); i++) {\n"
+                        + "                        if (" + classNameMin + ".get" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "() == " + atributos.get(i).getOriginTableFK() + "s.get(i)) { \n"
+                        + "                            cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ".setSelectedIndex(i);\n"
+                        + "                            break;\n"
+                        + "                        }\n"
+                        + "                    }\n");
             }
         }
 
@@ -241,24 +308,28 @@ class GeradorDeGUI {
         );
 
         for (int i = 0; i < atributos.size(); i++) {
-            switch (atributos.get(i).getTypeJava()) {
-                case "String":
-                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText());");
-                    break;
-                case "int":
-                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Integer.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
-                    break;
-                case "double":
-                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Double.parseDouble(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
-                    break;
-                case "Short":
-                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Short.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
-                    break;
-                case "Date":
-                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(dt.conversionStringToDate(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
-                    break;                    
-                default:
-                    cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(" + atributos.get(i).getTypeJava() + ".valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+            if (atributos.get(i).getOriginTableFK() == null) {
+                switch (atributos.get(i).getTypeJava()) {
+                    case "String":
+                        cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText());");
+                        break;
+                    case "int":
+                        cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Integer.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+                        break;
+                    case "double":
+                        cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Double.parseDouble(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+                        break;
+                    case "Short":
+                        cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(Short.valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+                        break;
+                    case "Date":
+                        cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(dt.conversionStringToDate(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+                        break;
+                    default:
+                        cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(" + atributos.get(i).getTypeJava() + ".valueOf(tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".getText()));");
+                }
+            } else {
+                cg.add("                " + classNameMin + ".set" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(" + atributos.get(i).getOriginTableFK() + "s.get(cb" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ".getSelectedIndex()));");
             }
         }
 

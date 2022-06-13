@@ -3,6 +3,9 @@ package GUIs;
 import Entidades.Atribute;
 import Entidades.Table;
 import Entidades.JDBC;
+import Geradores.GeradorDeDAO;
+import Geradores.GeradorDeGUI;
+import Geradores.GeradorDeMenu;
 import Tools.StringTools;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -216,16 +219,18 @@ public class GUI extends JFrame {
                                 + "   referenced_column_name as coluna_origem\n"
                                 + "\n"
                                 + "FROM information_schema.KEY_COLUMN_USAGE\n"
-                                + "WHERE REFERENCED_TABLE_NAME = '" + tables.get(i).getTableNameBD() +"'");
+                                + "WHERE REFERENCED_TABLE_NAME = '" + tables.get(i).getTableNameBD() + "'");
                         while (rsFK.next()) {
                             Table tableFK = jdbc.getTableByName(rsFK.getString(3));
                             Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString(2));
                             atributeFK.setOriginTableFK(rsFK.getString(4));
                         }
                     }
-                    // GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
-                    // GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes);
-                    // GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes, rsTables.getString(1));
+                    for (int i = 0; i < tables.size(); i++) {
+                        GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes());
+                        GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes(), tables.get(i).getTableNameBD());
+                    }
+                    GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -10,9 +10,9 @@ import java.util.List;
  *
  * @author JoaoAN2
  */
-class GeradorDeDAO {
+public class GeradorDeDAO {
 
-    GeradorDeDAO(String className, List<Atribute> atributos, String classNameBD) {
+    public GeradorDeDAO(String className, List<Atribute> atributos, String classNameBD) {
         StringTools st = new StringTools();
         String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList();

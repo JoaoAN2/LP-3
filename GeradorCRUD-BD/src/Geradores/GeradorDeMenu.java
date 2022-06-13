@@ -1,5 +1,6 @@
 package Geradores;
 
+import Entidades.Table;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
 import java.text.SimpleDateFormat;
@@ -11,9 +12,9 @@ import java.util.List;
  *
  * @author JoaoAN2
  */
-class GeradorDeMenu {
+public class GeradorDeMenu {
 
-    GeradorDeMenu(List<String> tables, String bdName) {
+    public GeradorDeMenu(List<Table> tables, String bdName) {
         List<String> cg = new ArrayList();
         StringTools st = new StringTools();
         cg.add("package GUIs;\n");
@@ -77,7 +78,7 @@ class GeradorDeMenu {
         );
 
         for (int i = 0; i < tables.size(); i++) {
-            cg.add("        cbMenuModel.addElement(\"" + st.firstLetterToUpperCase(st.bdToJava(tables.get(i))) + "\");");
+            cg.add("        cbMenuModel.addElement(\"" + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "\");");
         }
 
         cg.add("        btnChoose.addActionListener(new ActionListener() {\n"
@@ -86,8 +87,8 @@ class GeradorDeMenu {
                 + "                switch ((String) cbMenu.getSelectedItem()) {\n");
 
         for (int i = 0; i < tables.size(); i++) {
-            cg.add("                    case \"" + st.firstLetterToUpperCase(st.bdToJava(tables.get(i))) + "\":\n"
-                    + "                        " + st.firstLetterToUpperCase(st.bdToJava(tables.get(i))) + "GUI " + st.bdToJava(tables.get(i)) + " = new " + st.firstLetterToUpperCase(st.bdToJava(tables.get(i))) + "GUI();\n"
+            cg.add("                    case \"" + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "\":\n"
+                    + "                        " + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "GUI " + tables.get(i).getTableNameJava() + " = new " + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "GUI();\n"
                     + "                        break;");
         }
 
