@@ -1,7 +1,8 @@
-package Main;
+package GUIs;
 
 import Entidades.Atribute;
-import Tools.JDBC;
+import Entidades.Table;
+import Entidades.JDBC;
 import Tools.StringTools;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author JoaoAN
  */
-class GUI extends JFrame {
+public class GUI extends JFrame {
 
     Container cp;
 
@@ -177,13 +178,20 @@ class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Connection con = jdbc.getConnection();
                 try {
-                    List<String> tables = new ArrayList();
+                    List<Table> tables = new ArrayList();
                     ResultSet rsTables = con.createStatement().executeQuery("SHOW TABLES;");
+
                     while (rsTables.next()) {
+                        Table table = new Table();
+                        table.setTableNameBD(rsTables.getString(1));
+                        table.setTableNameJava(st.bdToJava(rsTables.getString(1)));
+                        tables.add(table);
+                        jdbc.setTables(tables);
+                    }
+
+                    for (int i = 0; i < tables.size(); i++) {
                         List<Atribute> atributes = new ArrayList();
-                        System.out.println("\n\nTabela: " + rsTables.getString(1));
-                        tables.add(rsTables.getString(1));
-                        ResultSet rsDesc = con.createStatement().executeQuery("DESC " + rsTables.getString(1));
+                        ResultSet rsDesc = con.createStatement().executeQuery("DESC " + tables.get(i).getTableNameBD());
                         while (rsDesc.next()) {
                             Atribute atribute = new Atribute();
                             atribute.setNameJava(st.bdToJava(rsDesc.getString(1)));
@@ -193,13 +201,31 @@ class GUI extends JFrame {
                             atribute.setTypeBD(rsDesc.getString(2));
                             atribute.setIsNull(rsDesc.getString(3).equals("YES"));
                             atribute.setKey(rsDesc.getString(4));
-                            System.out.println(atribute.toString());
                             atributes.add(atribute);
                         }
-                        // GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
-                        // GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes);
-                        // GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes, rsTables.getString(1));
+                        tables.get(i).setAtributes(atributes);
+
                     }
+
+                    for (int i = 0; i < tables.size(); i++) {
+                        ResultSet rsFK = con.createStatement().executeQuery("SELECT\n"
+                                + "   constraint_name as nome_restricao,\n"
+                                + "   column_name as coluna_estrangeira,\n"
+                                + "   table_name as tabela_estrangeira,\n"
+                                + "   referenced_table_name as tabela_origem, \n"
+                                + "   referenced_column_name as coluna_origem\n"
+                                + "\n"
+                                + "FROM information_schema.KEY_COLUMN_USAGE\n"
+                                + "WHERE REFERENCED_TABLE_NAME = '" + tables.get(i).getTableNameBD() +"'");
+                        while (rsFK.next()) {
+                            Table tableFK = jdbc.getTableByName(rsFK.getString(3));
+                            Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString(2));
+                            atributeFK.setOriginTableFK(rsFK.getString(4));
+                        }
+                    }
+                    // GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
+                    // GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes);
+                    // GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(st.bdToJava(rsTables.getString(1))), atributes, rsTables.getString(1));
                 } catch (SQLException ex) {
                     Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }

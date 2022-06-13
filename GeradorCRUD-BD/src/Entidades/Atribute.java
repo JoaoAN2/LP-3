@@ -13,6 +13,7 @@ public class Atribute {
     private boolean isNull;
     private String key;
     private int size;
+    private String originTableFK;
 
     public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size) {
         this.nameJava = nameJava;
@@ -83,8 +84,17 @@ public class Atribute {
         this.typeJava = typeJava;
     }
     
+    public String getOriginTableFK() {
+        return originTableFK;
+    }
+
+    public void setOriginTableFK(String originTableFK) {
+        this.originTableFK = originTableFK;
+    }
+    
     @Override
     public String toString() {
-        return nameJava + ";" + typeJava + ";" + nameBD + ";" + typeBD + ";" + isNull + ";" + key + ";" + size;
+        return nameJava + ";" + typeJava + ";" + nameBD + ";" + typeBD + ";" + isNull + ";" + key + ";" + size + ";" + originTableFK;
     }
+
 }

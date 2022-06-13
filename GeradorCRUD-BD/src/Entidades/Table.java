@@ -7,10 +7,10 @@ import java.util.List;
  * @author JoaoAN2
  */
 public class Table {
-    
-    String tableNameBD;
-    String tableNameJava;
-    List<Atribute> atributes;
+
+    private String tableNameBD;
+    private String tableNameJava;
+    private List<Atribute> atributes;
 
     public Table() {
     }
@@ -45,9 +45,18 @@ public class Table {
         this.atributes = atributes;
     }
 
+    public Atribute getAtributeByName(String atributeName) {
+        for (int i = 0; i < this.atributes.size(); i++) {
+            if (atributeName.equals(atributes.get(i).getNameBD())) {
+                return atributes.get(i);
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return tableNameBD + ";" + tableNameJava + ";" + atributes;
     }
-            
+
 }

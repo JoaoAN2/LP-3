@@ -1,4 +1,4 @@
-package Main;
+package Geradores;
 
 import Entidades.Atribute;
 import Tools.ManipulaArquivo;

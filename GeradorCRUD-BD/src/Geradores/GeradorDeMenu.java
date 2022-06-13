@@ -1,4 +1,4 @@
-package Main;
+package Geradores;
 
 import Tools.ManipulaArquivo;
 import Tools.StringTools;

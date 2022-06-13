@@ -1,8 +1,9 @@
-package Tools;
+package Entidades;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -20,6 +21,7 @@ public class JDBC {
     private String dataBaseName = null;
     private String dataBasePrefix = null;
     private String dataBasePort = null;
+    private List<Table> tables = null;
 
     public JDBC() {
     }
@@ -127,5 +129,22 @@ public class JDBC {
 
     public void setDataBasePort(String dataBasePort) {
         this.dataBasePort = dataBasePort;
+    }
+
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<Table> tables) {
+        this.tables = tables;
+    }
+    
+    public Table getTableByName(String tableName) {
+        for (int i = 0; i < this.tables.size(); i++) {
+            if (tableName.equals(tables.get(i).getTableNameBD())) {
+                return tables.get(i);
+            }
+        }
+        return null;
     }
 }
