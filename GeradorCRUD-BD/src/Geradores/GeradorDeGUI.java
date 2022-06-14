@@ -24,12 +24,12 @@ public class GeradorDeGUI {
 
         // Imports
         cg.add("import Entidades." + className + ";\n"
-                + "import DAOs.DAO" + className + ";\n");
+                + "import DAOs.DAO" + className + ";");
 
         for (int i = 0; i < atributos.size(); i++) {
             if (atributos.get(i).getOriginTableFK() != null) {
                 cg.add("import Entidades." + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ";\n"
-                        + "import DAOs.DAO" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ";\n");
+                        + "import DAOs.DAO" + st.firstLetterToUpperCase(atributos.get(i).getOriginTableFK()) + ";");
                 hasFK = true;
             }
             if (atributos.get(i).getTypeJava().equals("Date")) {
@@ -56,12 +56,12 @@ public class GeradorDeGUI {
                 + "import javax.swing.JPanel;\n"
                 + "import javax.swing.JScrollPane;\n"
                 + "import javax.swing.JTable;\n"
-                + "import javax.swing.JTextField;\n"
+                + "import javax.swing.JTextField;"
         );
 
         if (hasFK) {
             cg.add("import javax.swing.DefaultComboBoxModel;\n"
-                    + "import javax.swing.JComboBox;\n");
+                    + "import javax.swing.JComboBox;");
         }
         if (hasDate) {
             cg.add("import Tools.DateTools;");
@@ -93,7 +93,7 @@ public class GeradorDeGUI {
 
         String parametroColunas = "";
         for (int i = 0; i < atributos.size(); i++) {
-            parametroColunas += "\"" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "\", ";
+            parametroColunas += "\"" + st.firstLetterToUpperCase(atributos.get(i).getLabelName()) + "\", ";
         }
         parametroColunas = parametroColunas.substring(0, parametroColunas.length() - 2);
 
@@ -122,7 +122,7 @@ public class GeradorDeGUI {
 
         // Labels e TextFields
         for (int i = 0; i < atributos.size(); i++) {
-            cg.add("    JLabel lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JLabel(\"" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "\");\n");
+            cg.add("    JLabel lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JLabel(\"" + st.firstLetterToUpperCase(atributos.get(i).getLabelName()) + "\");\n");
 
             if (atributos.get(i).getOriginTableFK() == null) {
                 cg.add("    JTextField tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JTextField(" + atributos.get(i).getSize() + ");\n");

@@ -75,4 +75,12 @@ public class StringTools {
         }
         return size;
     }
+    
+    public String labelJava(String x) {
+        while (x.contains("_")) {
+            int index = x.indexOf("_") + 1;
+            x = x.substring(0, index - 1) + " " + x.substring(index, index + 1).toUpperCase() + x.substring(index + 1);
+        }
+        return firstLetterToUpperCase(x);
+    }
 }

@@ -14,8 +14,9 @@ public class Atribute {
     private String key;
     private int size;
     private String originTableFK;
+    private String labelName;
 
-    public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size) {
+    public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size, String originTableFK, String labelName) {
         this.nameJava = nameJava;
         this.typeJava = typeJava;
         this.nameBD = nameBD;
@@ -23,6 +24,8 @@ public class Atribute {
         this.isNull = isNull;
         this.key = key;
         this.size = size;
+        this.originTableFK = originTableFK;
+        this.labelName = labelName;
     }
 
     public Atribute() {
@@ -83,7 +86,7 @@ public class Atribute {
     public void setTypeJava(String typeJava) {
         this.typeJava = typeJava;
     }
-    
+
     public String getOriginTableFK() {
         return originTableFK;
     }
@@ -91,10 +94,18 @@ public class Atribute {
     public void setOriginTableFK(String originTableFK) {
         this.originTableFK = originTableFK;
     }
-    
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
+
     @Override
     public String toString() {
-        return nameJava + ";" + typeJava + ";" + nameBD + ";" + typeBD + ";" + isNull + ";" + key + ";" + size + ";" + originTableFK;
+        return nameJava + ";" + typeJava + ";" + nameBD + ";" + typeBD + ";" + isNull + ";" + key + ";" + size + ";" + originTableFK + ";" + labelName;
     }
 
 }

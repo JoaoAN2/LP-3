@@ -134,7 +134,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("Testando");
 
-                boolean test = true;
+                boolean test = false;
                 if (test) {
                     jdbc.setHostName("localhost");
                     jdbc.setUserName("root");
@@ -172,6 +172,7 @@ public class GUI extends JFrame {
                 btnConnectionTest.setVisible(true);
                 btnCancel.setVisible(false);
                 btnGenerate.setVisible(false);
+                jdbc.closeConnection();
                 enable();
             }
         });
@@ -204,6 +205,7 @@ public class GUI extends JFrame {
                             atribute.setTypeBD(rsDesc.getString(2));
                             atribute.setIsNull(rsDesc.getString(3).equals("YES"));
                             atribute.setKey(rsDesc.getString(4));
+                            atribute.setLabelName(st.labelJava(rsDesc.getString(1)));
                             atributes.add(atribute);
                         }
                         tables.get(i).setAtributes(atributes);
@@ -212,18 +214,18 @@ public class GUI extends JFrame {
 
                     for (int i = 0; i < tables.size(); i++) {
                         ResultSet rsFK = con.createStatement().executeQuery("SELECT\n"
-                                + "   constraint_name as nome_restricao,\n"
-                                + "   column_name as coluna_estrangeira,\n"
-                                + "   table_name as tabela_estrangeira,\n"
-                                + "   referenced_table_name as tabela_origem, \n"
-                                + "   referenced_column_name as coluna_origem\n"
+                                + "   constraint_name,\n"
+                                + "   column_name,\n"
+                                + "   table_name,\n"
+                                + "   referenced_table_name, \n"
+                                + "   referenced_column_name\n"
                                 + "\n"
                                 + "FROM information_schema.KEY_COLUMN_USAGE\n"
                                 + "WHERE REFERENCED_TABLE_NAME = '" + tables.get(i).getTableNameBD() + "'");
                         while (rsFK.next()) {
-                            Table tableFK = jdbc.getTableByName(rsFK.getString(3));
-                            Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString(2));
-                            atributeFK.setOriginTableFK(rsFK.getString(4));
+                            Table tableFK = jdbc.getTableByName(rsFK.getString("table_name"));
+                            Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString("column_name"));
+                            atributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
                         }
                     }
                     for (int i = 0; i < tables.size(); i++) {

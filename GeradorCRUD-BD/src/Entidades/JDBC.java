@@ -52,6 +52,7 @@ public class JDBC {
         if (con != null) {
             try {
                 con.close();
+                System.out.println("Conexão interrompida");
             } catch (SQLException e) {
                 //TODO: use um sistema de log apropriado.
                 e.printStackTrace();
