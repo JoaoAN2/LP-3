@@ -100,7 +100,7 @@ public class GeradorDeDAO {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.salvarArquivo("/home/joaoan2/NetBeansProjects/TesteGerador/src/DAOs/DAO" + className + ".java", cg);
+        manipulaArquivo.salvarArquivo("/home/joaoan2/projects/LP-3/TesteGerador/src/DAOs/DAO" + className + ".java", cg);
 
     }
 

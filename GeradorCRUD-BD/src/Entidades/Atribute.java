@@ -14,6 +14,7 @@ public class Atribute {
     private String key;
     private int size;
     private String originTableFK;
+    private String originNameFK;
     private String labelName;
 
     public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size, String originTableFK, String labelName) {
@@ -25,6 +26,7 @@ public class Atribute {
         this.key = key;
         this.size = size;
         this.originTableFK = originTableFK;
+        this.originNameFK = originNameFK;
         this.labelName = labelName;
     }
 
@@ -103,9 +105,17 @@ public class Atribute {
         this.labelName = labelName;
     }
 
+    public String getOriginNameFK() {
+        return originNameFK;
+    }
+
+    public void setOriginNameFK(String originNameFK) {
+        this.originNameFK = originNameFK;
+    }
+
     @Override
     public String toString() {
-        return nameJava + ";" + typeJava + ";" + nameBD + ";" + typeBD + ";" + isNull + ";" + key + ";" + size + ";" + originTableFK + ";" + labelName;
+        return nameJava + ";" + typeJava + ";" + nameBD + ";" + typeBD + ";" + isNull + ";" + key + ";" + size + ";" + originTableFK + ";" + originNameFK + ";" + labelName;
     }
 
 }

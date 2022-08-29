@@ -78,7 +78,7 @@ public class GeradorDeMenu {
         );
 
         for (int i = 0; i < tables.size(); i++) {
-            cg.add("        cbMenuModel.addElement(\"" + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "\");");
+            cg.add("        cbMenuModel.addElement(\"" + st.firstLetterToUpperCase(st.labelJava(tables.get(i).getTableNameJava())) + "\");");
         }
 
         cg.add("        btnChoose.addActionListener(new ActionListener() {\n"
@@ -87,7 +87,7 @@ public class GeradorDeMenu {
                 + "                switch ((String) cbMenu.getSelectedItem()) {\n");
 
         for (int i = 0; i < tables.size(); i++) {
-            cg.add("                    case \"" + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "\":\n"
+            cg.add("                    case \"" + st.firstLetterToUpperCase(st.labelJava(tables.get(i).getTableNameJava())) + "\":\n"
                     + "                        " + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "GUI " + tables.get(i).getTableNameJava() + " = new " + st.firstLetterToUpperCase(tables.get(i).getTableNameJava()) + "GUI();\n"
                     + "                        break;");
         }
@@ -108,6 +108,6 @@ public class GeradorDeMenu {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.salvarArquivo("/home/joaoan2/NetBeansProjects/TesteGerador/src/GUIs/GUIMenu.java", cg);
+        manipulaArquivo.salvarArquivo("/home/joaoan2/projects/LP-3/TesteGerador/src/GUIs/GUIMenu.java", cg);
     }
 }

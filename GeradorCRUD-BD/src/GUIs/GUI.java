@@ -1,11 +1,8 @@
 package GUIs;
 
-import Entidades.Atribute;
-import Entidades.Table;
+import Controllers.Connect;
+import Controllers.Generate;
 import Entidades.JDBC;
-import Geradores.GeradorDeDAO;
-import Geradores.GeradorDeGUI;
-import Geradores.GeradorDeMenu;
 import Tools.StringTools;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -19,16 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author JoaoAN
+ * @author JoaoAN2
  */
 public class GUI extends JFrame {
 
@@ -133,26 +124,9 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("Testando");
-
-                boolean test = false;
-                if (test) {
-                    jdbc.setHostName("localhost");
-                    jdbc.setUserName("root");
-                    jdbc.setPassword("2na7N#tU");
-                    jdbc.setJdbcDriver("com.mysql.cj.jdbc.Driver");
-                    jdbc.setDataBaseName("chess");
-                    jdbc.setDataBasePrefix("jdbc:mysql://");
-                    jdbc.setDataBasePort("3306");
-                } else {
-                    jdbc.setHostName(tfHostName.getText());
-                    jdbc.setUserName(tfUserName.getText());
-                    jdbc.setPassword(tfPassword.getText());
-                    jdbc.setJdbcDriver("com.mysql.cj.jdbc.Driver");
-                    jdbc.setDataBaseName(tfDatabaseName.getText());
-                    jdbc.setDataBasePrefix("jdbc:mysql://");
-                    jdbc.setDataBasePort(tfPort.getText());
-                }
-
+                // Connect connect = new Connect(jdbc, tfHostName.getText(), tfUserName.getText(), tfPassword.getText(), "com.mysql.cj.jdbc.Driver", tfDatabaseName.getText(), "jdbc:mysql://", tfPort.getText());
+                Connect connect = new Connect(jdbc);
+                
                 Connection con = jdbc.getConnection();
                 if (con != null) {
                     lbStatus.setText("BD \"" + jdbc.getDataBaseName() + "\" conectado com sucesso!");
@@ -180,62 +154,7 @@ public class GUI extends JFrame {
         btnGenerate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Connection con = jdbc.getConnection();
-                try {
-                    List<Table> tables = new ArrayList();
-                    ResultSet rsTables = con.createStatement().executeQuery("SHOW TABLES;");
-
-                    while (rsTables.next()) {
-                        Table table = new Table();
-                        table.setTableNameBD(rsTables.getString(1));
-                        table.setTableNameJava(st.bdToJava(rsTables.getString(1)));
-                        tables.add(table);
-                        jdbc.setTables(tables);
-                    }
-
-                    for (int i = 0; i < tables.size(); i++) {
-                        List<Atribute> atributes = new ArrayList();
-                        ResultSet rsDesc = con.createStatement().executeQuery("DESC " + tables.get(i).getTableNameBD());
-                        while (rsDesc.next()) {
-                            Atribute atribute = new Atribute();
-                            atribute.setNameJava(st.bdToJava(rsDesc.getString(1)));
-                            atribute.setTypeJava(st.convertTypeBDToJava(rsDesc.getString(2)));
-                            atribute.setNameBD(rsDesc.getString(1));
-                            atribute.setSize(st.sizeAtributes(rsDesc.getString(2)));
-                            atribute.setTypeBD(rsDesc.getString(2));
-                            atribute.setIsNull(rsDesc.getString(3).equals("YES"));
-                            atribute.setKey(rsDesc.getString(4));
-                            atribute.setLabelName(st.labelJava(rsDesc.getString(1)));
-                            atributes.add(atribute);
-                        }
-                        tables.get(i).setAtributes(atributes);
-
-                    }
-
-                    for (int i = 0; i < tables.size(); i++) {
-                        ResultSet rsFK = con.createStatement().executeQuery("SELECT\n"
-                                + "   constraint_name,\n"
-                                + "   column_name,\n"
-                                + "   table_name,\n"
-                                + "   referenced_table_name, \n"
-                                + "   referenced_column_name\n"
-                                + "\n"
-                                + "FROM information_schema.KEY_COLUMN_USAGE\n"
-                                + "WHERE REFERENCED_TABLE_NAME = '" + tables.get(i).getTableNameBD() + "'");
-                        while (rsFK.next()) {
-                            Table tableFK = jdbc.getTableByName(rsFK.getString("table_name"));
-                            Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString("column_name"));
-                            atributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
-                        }
-                    }
-                    for (int i = 0; i < tables.size(); i++) {
-                        GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes());
-                        GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes(), tables.get(i).getTableNameBD());
-                    }
-                    GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
-                } catch (SQLException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Generate generate = new Generate(jdbc);
             }
         });
 

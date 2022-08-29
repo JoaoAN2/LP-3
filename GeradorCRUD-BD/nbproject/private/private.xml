@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/joaoan2/projects/LP-3/GeradorCRUD-BD/src/Geradores/GeradorDeGUI.java</file>
+            <file>file:/home/joaoan2/projects/LP-3/GeradorCRUD-BD/src/Entidades/Table.java</file>
+            <file>file:/home/joaoan2/projects/LP-3/GeradorCRUD-BD/src/Entidades/JDBC.java</file>
+            <file>file:/home/joaoan2/projects/LP-3/GeradorCRUD-BD/src/Entidades/Atribute.java</file>
+            <file>file:/home/joaoan2/projects/LP-3/GeradorCRUD-BD/src/GUIs/GUI.java</file>
+            <file>file:/home/joaoan2/projects/LP-3/GeradorCRUD-BD/src/Controllers/Connect.java</file>
         </group>
     </open-files>
 </project-private>
