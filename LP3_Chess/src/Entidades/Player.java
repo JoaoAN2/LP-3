@@ -4,6 +4,10 @@
  */
 package Entidades;
 
+import Tools.DateTools;
+
+import Tools.DateTools;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +37,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Player.findByIdPlayer", query = "SELECT p FROM Player p WHERE p.idPlayer = :idPlayer"),
     @NamedQuery(name = "Player.findByNamePlayer", query = "SELECT p FROM Player p WHERE p.namePlayer = :namePlayer"),
     @NamedQuery(name = "Player.findByPointsPlayer", query = "SELECT p FROM Player p WHERE p.pointsPlayer = :pointsPlayer"),
-    @NamedQuery(name = "Player.findByBirthdayPlayer", query = "SELECT p FROM Player p WHERE p.birthdayPlayer = :birthdayPlayer")})
+    @NamedQuery(name = "Player.findByBirthdayPlayer", query = "SELECT p FROM Player p WHERE p.birthdayPlayer = :birthdayPlayer"),
+    @NamedQuery(name = "Player.findByProfilePictureUrl", query = "SELECT p FROM Player p WHERE p.profilePictureUrl = :profilePictureUrl")})
 public class Player implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +56,8 @@ public class Player implements Serializable {
     @Column(name = "birthday_player")
     @Temporal(TemporalType.DATE)
     private Date birthdayPlayer;
+    @Column(name = "profile_picture_url")
+    private String profilePictureUrl;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
     private List<Tournaments> tournamentsList;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "player")
@@ -109,6 +116,14 @@ public class Player implements Serializable {
 
     public void setBirthdayPlayer(Date birthdayPlayer) {
         this.birthdayPlayer = birthdayPlayer;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public List<Tournaments> getTournamentsList() {
@@ -173,7 +188,7 @@ public class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Player[ idPlayer=" + idPlayer + " ]";
-    }
-    
+        DateTools dt = new DateTools();
+        return idPlayer + ";" + namePlayer + ";" + pointsPlayer + ";" + dt.conversionDateToString(birthdayPlayer) + ";" + federationSiglaPlayer.getSiglaFederation() + ";" + genderSiglaPlayer.getSiglaGender() + ";" + titleSiglaPlayer.getSiglaTitle() + ";" + profilePictureUrl;
+    }    
 }

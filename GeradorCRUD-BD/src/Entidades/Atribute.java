@@ -17,7 +17,7 @@ public class Atribute {
     private String originNameFK;
     private String labelName;
 
-    public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size, String originTableFK, String labelName) {
+    public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size, String originTableFK, String originNameFK, String labelName) {
         this.nameJava = nameJava;
         this.typeJava = typeJava;
         this.nameBD = nameBD;

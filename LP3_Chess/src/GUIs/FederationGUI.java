@@ -1,7 +1,6 @@
 package GUIs;
 
 import Entidades.Federation;
-import Tools.ManipulaArquivo;
 import DAOs.DAOFederation;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,25 +22,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
-/**
- * @author JoaoAN2 26/04/2022 - 18:06:27
+ /**
+ * @author JoaoAN2 24/09/2022 - 22:14:35
  */
-public class FederationGUI extends JDialog {
 
+public class FederationGUI extends JDialog {
     Federation federation = new Federation();
     DAOFederation daoFederation = new DAOFederation();
-    ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
     String action;
 
     Container cp;
     JPanel pnNorth = new JPanel();
     JPanel pnSouth = new JPanel();
     JPanel pnCenter = new JPanel();
-    JPanel pnList = new JPanel(new GridLayout(1, 1));
+    JPanel pnList = new JPanel(new GridLayout(1,1));
 
-    String[] col = new String[]{"Sigla da Federação", "Nome da Federação"};
+    String[] col = new String[]{"Sigla Federation", "Name Federation"};
     String[][] data = new String[0][col.length];
     DefaultTableModel model = new DefaultTableModel(data, col);
 
@@ -56,10 +54,10 @@ public class FederationGUI extends JDialog {
     JButton btnList = new JButton("Listar");
     JButton btnCancel = new JButton("Cancelar");
 
-    JLabel lbSiglaFederation = new JLabel("Sigla da Federação");
+    JLabel lbSiglaFederation = new JLabel("Sigla Federation");
     JTextField tfSiglaFederation = new JTextField(3);
 
-    JLabel lbNameFederation = new JLabel("Nome da Federação");
+    JLabel lbNameFederation = new JLabel("Name Federation");
     JTextField tfNameFederation = new JTextField(45);
 
     private List<Federation> list = new ArrayList<>();
@@ -76,11 +74,12 @@ public class FederationGUI extends JDialog {
         tfNameFederation.setEditable(false);
     }
 
+
     public FederationGUI() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         cp = getContentPane();
         cp.setLayout(new BorderLayout());
-        setTitle("CRUD - Federação");
+        setTitle("CRUD - Federation");
 
         pnCenter.setLayout(new GridLayout(1, col.length - 1));
         pnNorth.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -92,8 +91,11 @@ public class FederationGUI extends JDialog {
         pnNorth.setBackground(Color.cyan);
         pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));
 
+
         pnNorth.add(lbSiglaFederation);
         pnNorth.add(tfSiglaFederation);
+
+        pnNorth.add(lbNameFederation);
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
@@ -125,32 +127,30 @@ public class FederationGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 cardLayout.show(pnSouth, "warning");
-                if (tfSiglaFederation.getText().trim().length() == 3) {
-                    federation = daoFederation.obter(tfSiglaFederation.getText());
-                    if (federation != null) {
-                        btnCreate.setVisible(false);
-                        btnUpdate.setVisible(true);
-                        btnDelete.setVisible(true);
 
-                        tfNameFederation.setText(federation.getNameFederation());
-                    } else {
-                        clear();
-                        btnCreate.setVisible(true);
-                        btnUpdate.setVisible(false);
-                        btnDelete.setVisible(false);
-                    }
+                federation = daoFederation.obter(tfSiglaFederation.getText());
+
+                if (federation != null) {
+                    btnCreate.setVisible(false);
+                    btnUpdate.setVisible(true);
+                    btnDelete.setVisible(true);
+
+                    tfNameFederation.setText(federation.getNameFederation());
                 } else {
-                    JOptionPane.showMessageDialog(cp, "Insira uma sigla de 3 caracteres!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
-                    tfSiglaFederation.selectAll();
-                    tfSiglaFederation.requestFocus();
+                    clear();
+                    btnCreate.setVisible(true);
+                    btnUpdate.setVisible(false);
+                    btnDelete.setVisible(false);
                 }
             }
         });
 
-        btnCreate.addActionListener(new ActionListener() {
+       btnCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+
                 tfNameFederation.requestFocus();
+
                 tfSiglaFederation.setEnabled(false);
                 enabled();
 
@@ -164,46 +164,40 @@ public class FederationGUI extends JDialog {
             }
         });
 
-        btnSave.addActionListener(new ActionListener() {
+       btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if (!tfNameFederation.getText().trim().equals("")) {
-                    if ("create".equals(action)) {
-                        federation = new Federation();
-                    }
-
-                    federation.setSiglaFederation(tfSiglaFederation.getText());
-                    federation.setNameFederation(tfNameFederation.getText());
-
-                    if ("create".equals(action)) {
-                        daoFederation.inserir(federation);
-                    }
-
-                    if ("update".equals(action)) {
-                        daoFederation.atualizar(federation);
-                    }
-
-                    btnSearch.setVisible(true);
-                    btnList.setVisible(true);
-                    btnSave.setVisible(false);
-                    btnCancel.setVisible(false);
-                    btnDelete.setVisible(false);
-
-                    tfSiglaFederation.setEnabled(true);
-                    tfSiglaFederation.setEditable(true);
-                    tfSiglaFederation.requestFocus();
-
-                    clear();
-                    disabled();
-
-                } else {
-                    JOptionPane.showMessageDialog(cp, "Dados inseridos de maneira inválida!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
+                if("create".equals(action)) {
+                    federation =  new Federation();
                 }
+
+                federation.setSiglaFederation(tfSiglaFederation.getText());
+                federation.setNameFederation(tfNameFederation.getText());
+
+                if("create".equals(action)){
+                    daoFederation.inserir(federation);
+                }
+
+                if("update".equals(action)){
+                    daoFederation.atualizar(federation);
+                }
+
+                btnSearch.setVisible(true);
+                btnList.setVisible(true);
+                btnSave.setVisible(false);
+                btnCancel.setVisible(false);
+                btnDelete.setVisible(false);
+
+                tfSiglaFederation.setEnabled(true);
+                tfSiglaFederation.setEditable(true);
+
+                clear();
+                disabled();
 
             }
         });
 
-        btnUpdate.addActionListener(new ActionListener() {
+       btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -213,15 +207,17 @@ public class FederationGUI extends JDialog {
                 btnCancel.setVisible(true);
                 btnList.setVisible(false);
                 btnUpdate.setVisible(false);
-                tfNameFederation.requestFocus();
+
+                tfSiglaFederation.setEnabled(false);
                 tfSiglaFederation.setEditable(false);
+
                 enabled();
 
                 action = "update";
             }
         });
 
-        btnDelete.addActionListener(new ActionListener() {
+       btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -232,29 +228,30 @@ public class FederationGUI extends JDialog {
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 );
+
                 tfSiglaFederation.setEnabled(true);
                 tfSiglaFederation.setEditable(true);
-                tfSiglaFederation.requestFocus();
                 tfSiglaFederation.setText("");
+
                 clear();
                 disabled();
                 btnDelete.setVisible(false);
                 btnUpdate.setVisible(false);
                 btnCancel.setVisible(false);
-
-                if (response == JOptionPane.YES_OPTION) {
+                btnSearch.setVisible(true);
+                if(response == JOptionPane.YES_OPTION) {
                     daoFederation.remover(federation);
                 }
 
             }
         });
 
-        btnList.addActionListener(new ActionListener() {
+       btnList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
                 List<Federation> federationList = daoFederation.list();
-                String[] col = {"Sigla da Federação", "Nome da Federação"};
+                String[] col = {"Sigla Federation", "Name Federation"};
                 Object[][] data = new Object[federationList.size()][col.length];
                 String aux[];
 
@@ -282,13 +279,13 @@ public class FederationGUI extends JDialog {
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                tfSiglaFederation.setText("");
-                tfSiglaFederation.requestFocus();
+
                 tfSiglaFederation.setEnabled(true);
                 tfSiglaFederation.setEditable(true);
+                tfSiglaFederation.setText("");
 
-                clear();
                 disabled();
+                clear();
 
                 btnCreate.setVisible(false);
                 btnUpdate.setVisible(false);
@@ -301,7 +298,7 @@ public class FederationGUI extends JDialog {
         });
 
         setModal(true);
-        setSize(600, 250);
+        setSize(600,250);
         setLocationRelativeTo(null);
         setVisible(true);
     }

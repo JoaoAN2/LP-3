@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,24 +22,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
-/**
- * @author JoaoAN2 27/04/2022 - 09:56:21
+ /**
+ * @author JoaoAN2 24/09/2022 - 22:14:35
  */
-public class CatRefereeGUI extends JDialog {
 
+public class CatRefereeGUI extends JDialog {
     CatReferee catReferee = new CatReferee();
-    DAOCatReferee DAOCatReferee = new DAOCatReferee();
+    DAOCatReferee daoCatReferee = new DAOCatReferee();
     String action;
 
     Container cp;
     JPanel pnNorth = new JPanel();
     JPanel pnSouth = new JPanel();
     JPanel pnCenter = new JPanel();
-    JPanel pnList = new JPanel(new GridLayout(1, 1));
+    JPanel pnList = new JPanel(new GridLayout(1,1));
 
-    String[] col = new String[]{"SiglaCatReferee", "NameCatReferee"};
+    String[] col = new String[]{"Sigla Cat Referee", "Name Cat Referee"};
     String[][] data = new String[0][col.length];
     DefaultTableModel model = new DefaultTableModel(data, col);
 
@@ -54,11 +54,11 @@ public class CatRefereeGUI extends JDialog {
     JButton btnList = new JButton("Listar");
     JButton btnCancel = new JButton("Cancelar");
 
-    JLabel lbSiglaCatReferee = new JLabel("Categoria de Árbitro");
-    JTextField tfSiglaCatReferee = new JTextField(11);
+    JLabel lbSiglaCatReferee = new JLabel("Sigla Cat Referee");
+    JTextField tfSiglaCatReferee = new JTextField(3);
 
-    JLabel lbNameCatReferee = new JLabel("Nome de Árbitro");
-    JTextField tfNameCatReferee = new JTextField(45);
+    JLabel lbNameCatReferee = new JLabel("Name Cat Referee");
+    JTextField tfNameCatReferee = new JTextField(70);
 
     private List<CatReferee> list = new ArrayList<>();
 
@@ -74,11 +74,12 @@ public class CatRefereeGUI extends JDialog {
         tfNameCatReferee.setEditable(false);
     }
 
+
     public CatRefereeGUI() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         cp = getContentPane();
         cp.setLayout(new BorderLayout());
-        setTitle("CRUD - Categoria de Árbitro");
+        setTitle("CRUD - CatReferee");
 
         pnCenter.setLayout(new GridLayout(1, col.length - 1));
         pnNorth.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -90,8 +91,11 @@ public class CatRefereeGUI extends JDialog {
         pnNorth.setBackground(Color.cyan);
         pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));
 
+
         pnNorth.add(lbSiglaCatReferee);
         pnNorth.add(tfSiglaCatReferee);
+
+        pnNorth.add(lbNameCatReferee);
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
@@ -123,36 +127,30 @@ public class CatRefereeGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 cardLayout.show(pnSouth, "warning");
-                if (tfSiglaCatReferee.getText().trim().length() == 2 || tfSiglaCatReferee.getText().trim().length() == 2) {
 
-                    catReferee = DAOCatReferee.obter(tfSiglaCatReferee.getText());
-                    if (catReferee != null) {
-                        btnCreate.setVisible(false);
-                        btnUpdate.setVisible(true);
-                        btnDelete.setVisible(true);
+                catReferee = daoCatReferee.obter(tfSiglaCatReferee.getText());
 
-                        tfNameCatReferee.setText(catReferee.getNameCatReferee());
-                    } else {
-                        clear();
-                        btnCreate.setVisible(true);
-                        btnUpdate.setVisible(false);
-                        btnDelete.setVisible(false);
-                    }
+                if (catReferee != null) {
+                    btnCreate.setVisible(false);
+                    btnUpdate.setVisible(true);
+                    btnDelete.setVisible(true);
+
+                    tfNameCatReferee.setText(catReferee.getNameCatReferee());
                 } else {
-                    JOptionPane.showMessageDialog(cp, "Insira uma sigla de 2 ou 3 caracteres!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
-                    tfSiglaCatReferee.selectAll();
-                    tfSiglaCatReferee.requestFocus();
+                    clear();
+                    btnCreate.setVisible(true);
+                    btnUpdate.setVisible(false);
+                    btnDelete.setVisible(false);
                 }
             }
-        }
-        );
+        });
 
-        btnCreate.addActionListener(
-                new ActionListener() {
+       btnCreate.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae
-            ) {
+            public void actionPerformed(ActionEvent ae) {
+
                 tfNameCatReferee.requestFocus();
+
                 tfSiglaCatReferee.setEnabled(false);
                 enabled();
 
@@ -164,54 +162,44 @@ public class CatRefereeGUI extends JDialog {
 
                 action = "create";
             }
-        }
-        );
+        });
 
-        btnSave.addActionListener(
-                new ActionListener() {
+       btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                CatReferee oldCatReferee = catReferee;
-                if (!tfNameCatReferee.getText().trim().equals("")) {
-
-                    if ("create".equals(action)) {
-                        catReferee = new CatReferee();
-                    }
-
-                    catReferee.setSiglaCatReferee(tfSiglaCatReferee.getText());
-                    catReferee.setNameCatReferee(tfNameCatReferee.getText());
-
-                    if ("create".equals(action)) {
-                        DAOCatReferee.inserir(catReferee);
-                    }
-
-                    if ("update".equals(action)) {
-                        DAOCatReferee.atualizar(catReferee);
-                    }
-
-                    btnSearch.setVisible(true);
-                    btnList.setVisible(true);
-                    btnSave.setVisible(false);
-                    btnCancel.setVisible(false);
-                    btnDelete.setVisible(false);
-
-                    tfSiglaCatReferee.setEnabled(true);
-                    tfSiglaCatReferee.setEditable(true);
-                    tfSiglaCatReferee.requestFocus();
-                    clear();
-                    disabled();
-                } else {
-                    JOptionPane.showMessageDialog(cp, "Dados inseridos de maneira inválida!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
+                if("create".equals(action)) {
+                    catReferee =  new CatReferee();
                 }
-            }
-        }
-        );
 
-        btnUpdate.addActionListener(
-                new ActionListener() {
+                catReferee.setSiglaCatReferee(tfSiglaCatReferee.getText());
+                catReferee.setNameCatReferee(tfNameCatReferee.getText());
+
+                if("create".equals(action)){
+                    daoCatReferee.inserir(catReferee);
+                }
+
+                if("update".equals(action)){
+                    daoCatReferee.atualizar(catReferee);
+                }
+
+                btnSearch.setVisible(true);
+                btnList.setVisible(true);
+                btnSave.setVisible(false);
+                btnCancel.setVisible(false);
+                btnDelete.setVisible(false);
+
+                tfSiglaCatReferee.setEnabled(true);
+                tfSiglaCatReferee.setEditable(true);
+
+                clear();
+                disabled();
+
+            }
+        });
+
+       btnUpdate.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae
-            ) {
+            public void actionPerformed(ActionEvent ae) {
 
                 btnSearch.setVisible(false);
                 btnCreate.setVisible(false);
@@ -219,20 +207,19 @@ public class CatRefereeGUI extends JDialog {
                 btnCancel.setVisible(true);
                 btnList.setVisible(false);
                 btnUpdate.setVisible(false);
-                tfNameCatReferee.requestFocus();
+
+                tfSiglaCatReferee.setEnabled(false);
                 tfSiglaCatReferee.setEditable(false);
+
                 enabled();
 
                 action = "update";
             }
-        }
-        );
+        });
 
-        btnDelete.addActionListener(
-                new ActionListener() {
+       btnDelete.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae
-            ) {
+            public void actionPerformed(ActionEvent ae) {
 
                 int response = JOptionPane.showConfirmDialog(
                         cp,
@@ -241,32 +228,30 @@ public class CatRefereeGUI extends JDialog {
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 );
+
                 tfSiglaCatReferee.setEnabled(true);
                 tfSiglaCatReferee.setEditable(true);
-                tfSiglaCatReferee.requestFocus();
                 tfSiglaCatReferee.setText("");
+
                 clear();
                 disabled();
                 btnDelete.setVisible(false);
                 btnUpdate.setVisible(false);
                 btnCancel.setVisible(false);
-
-                if (response == JOptionPane.YES_OPTION) {
-                    DAOCatReferee.remover(catReferee);
+                btnSearch.setVisible(true);
+                if(response == JOptionPane.YES_OPTION) {
+                    daoCatReferee.remover(catReferee);
                 }
 
             }
-        }
-        );
+        });
 
-        btnList.addActionListener(
-                new ActionListener() {
+       btnList.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae
-            ) {
+            public void actionPerformed(ActionEvent ae) {
 
-                List<CatReferee> catRefereeList = DAOCatReferee.list();
-                String[] col = {"SiglaCatReferee", "NameCatReferee"};
+                List<CatReferee> catRefereeList = daoCatReferee.list();
+                String[] col = {"Sigla Cat Referee", "Name Cat Referee"};
                 Object[][] data = new Object[catRefereeList.size()][col.length];
                 String aux[];
 
@@ -289,21 +274,18 @@ public class CatRefereeGUI extends JDialog {
                 btnUpdate.setVisible(false);
                 btnDelete.setVisible(false);
             }
-        }
-        );
+        });
 
-        btnCancel.addActionListener(
-                new ActionListener() {
+        btnCancel.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae
-            ) {
-                tfSiglaCatReferee.setText("");
-                tfSiglaCatReferee.requestFocus();
+            public void actionPerformed(ActionEvent ae) {
+
                 tfSiglaCatReferee.setEnabled(true);
                 tfSiglaCatReferee.setEditable(true);
+                tfSiglaCatReferee.setText("");
 
-                clear();
                 disabled();
+                clear();
 
                 btnCreate.setVisible(false);
                 btnUpdate.setVisible(false);
@@ -313,16 +295,11 @@ public class CatRefereeGUI extends JDialog {
                 btnSearch.setVisible(true);
                 btnList.setVisible(true);
             }
-        }
-        );
+        });
 
-        setModal(
-                true);
-        setSize(
-                600, 250);
-        setLocationRelativeTo(
-                null);
-        setVisible(
-                true);
+        setModal(true);
+        setSize(600,250);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 }

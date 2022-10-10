@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,24 +22,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 
-/**
- * @author JoaoAN2 27/04/2022 - 09:48:55
+ /**
+ * @author JoaoAN2 24/09/2022 - 22:14:35
  */
-public class GenderGUI extends JDialog {
 
+public class GenderGUI extends JDialog {
     Gender gender = new Gender();
-    DAOGender DAOGender = new DAOGender();
+    DAOGender daoGender = new DAOGender();
     String action;
 
     Container cp;
     JPanel pnNorth = new JPanel();
     JPanel pnSouth = new JPanel();
     JPanel pnCenter = new JPanel();
-    JPanel pnList = new JPanel(new GridLayout(1, 1));
+    JPanel pnList = new JPanel(new GridLayout(1,1));
 
-    String[] col = new String[]{"Sigla do Gênero", "Gênero Completo"};
+    String[] col = new String[]{"Sigla Gender", "Full Gender"};
     String[][] data = new String[0][col.length];
     DefaultTableModel model = new DefaultTableModel(data, col);
 
@@ -54,10 +54,10 @@ public class GenderGUI extends JDialog {
     JButton btnList = new JButton("Listar");
     JButton btnCancel = new JButton("Cancelar");
 
-    JLabel lbSiglaGender = new JLabel("Sigla do Gênero");
+    JLabel lbSiglaGender = new JLabel("Sigla Gender");
     JTextField tfSiglaGender = new JTextField(3);
 
-    JLabel lbFullGender = new JLabel("Gênero Completo");
+    JLabel lbFullGender = new JLabel("Full Gender");
     JTextField tfFullGender = new JTextField(20);
 
     private List<Gender> list = new ArrayList<>();
@@ -74,11 +74,12 @@ public class GenderGUI extends JDialog {
         tfFullGender.setEditable(false);
     }
 
+
     public GenderGUI() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         cp = getContentPane();
         cp.setLayout(new BorderLayout());
-        setTitle("CRUD - Gênero");
+        setTitle("CRUD - Gender");
 
         pnCenter.setLayout(new GridLayout(1, col.length - 1));
         pnNorth.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -90,8 +91,11 @@ public class GenderGUI extends JDialog {
         pnNorth.setBackground(Color.cyan);
         pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));
 
+
         pnNorth.add(lbSiglaGender);
         pnNorth.add(tfSiglaGender);
+
+        pnNorth.add(lbFullGender);
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
@@ -124,32 +128,29 @@ public class GenderGUI extends JDialog {
             public void actionPerformed(ActionEvent ae) {
                 cardLayout.show(pnSouth, "warning");
 
-                if (tfSiglaGender.getText().trim().length() == 3) {
-                    gender = DAOGender.obter(tfSiglaGender.getText());
-                    if (gender != null) {
-                        btnCreate.setVisible(false);
-                        btnUpdate.setVisible(true);
-                        btnDelete.setVisible(true);
+                gender = daoGender.obter(tfSiglaGender.getText());
 
-                        tfFullGender.setText(gender.getFullGender());
-                    } else {
-                        clear();
-                        btnCreate.setVisible(true);
-                        btnUpdate.setVisible(false);
-                        btnDelete.setVisible(false);
-                    }
+                if (gender != null) {
+                    btnCreate.setVisible(false);
+                    btnUpdate.setVisible(true);
+                    btnDelete.setVisible(true);
+
+                    tfFullGender.setText(gender.getFullGender());
                 } else {
-                    JOptionPane.showMessageDialog(cp, "Insira uma sigla de 2 ou 3 caracteres!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
-                    tfSiglaGender.selectAll();
-                    tfSiglaGender.requestFocus();
+                    clear();
+                    btnCreate.setVisible(true);
+                    btnUpdate.setVisible(false);
+                    btnDelete.setVisible(false);
                 }
             }
         });
 
-        btnCreate.addActionListener(new ActionListener() {
+       btnCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+
                 tfFullGender.requestFocus();
+
                 tfSiglaGender.setEnabled(false);
                 enabled();
 
@@ -163,44 +164,40 @@ public class GenderGUI extends JDialog {
             }
         });
 
-        btnSave.addActionListener(new ActionListener() {
+       btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-
-                if (!tfFullGender.getText().trim().equals("")) {
-                    if ("create".equals(action)) {
-                        gender = new Gender();
-                    }
-
-                    gender.setSiglaGender(tfSiglaGender.getText());
-                    gender.setFullGender(tfFullGender.getText());
-
-                    if ("create".equals(action)) {
-                        DAOGender.inserir(gender);
-                    }
-
-                    if ("update".equals(action)) {
-                        DAOGender.atualizar(gender);
-                    }
-
-                    btnSearch.setVisible(true);
-                    btnList.setVisible(true);
-                    btnSave.setVisible(false);
-                    btnCancel.setVisible(false);
-                    btnDelete.setVisible(false);
-
-                    tfSiglaGender.setEnabled(true);
-                    tfSiglaGender.setEditable(true);
-                    tfSiglaGender.requestFocus();
-                    clear();
-                    disabled();
-                } else {
-                    JOptionPane.showMessageDialog(cp, "Dados inseridos de maneira inválida!", "Deu ruim patrão...", JOptionPane.PLAIN_MESSAGE);
+                if("create".equals(action)) {
+                    gender =  new Gender();
                 }
+
+                gender.setSiglaGender(tfSiglaGender.getText());
+                gender.setFullGender(tfFullGender.getText());
+
+                if("create".equals(action)){
+                    daoGender.inserir(gender);
+                }
+
+                if("update".equals(action)){
+                    daoGender.atualizar(gender);
+                }
+
+                btnSearch.setVisible(true);
+                btnList.setVisible(true);
+                btnSave.setVisible(false);
+                btnCancel.setVisible(false);
+                btnDelete.setVisible(false);
+
+                tfSiglaGender.setEnabled(true);
+                tfSiglaGender.setEditable(true);
+
+                clear();
+                disabled();
+
             }
         });
 
-        btnUpdate.addActionListener(new ActionListener() {
+       btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -210,15 +207,17 @@ public class GenderGUI extends JDialog {
                 btnCancel.setVisible(true);
                 btnList.setVisible(false);
                 btnUpdate.setVisible(false);
-                tfFullGender.requestFocus();
+
+                tfSiglaGender.setEnabled(false);
                 tfSiglaGender.setEditable(false);
+
                 enabled();
 
                 action = "update";
             }
         });
 
-        btnDelete.addActionListener(new ActionListener() {
+       btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
@@ -229,29 +228,30 @@ public class GenderGUI extends JDialog {
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE
                 );
+
                 tfSiglaGender.setEnabled(true);
                 tfSiglaGender.setEditable(true);
-                tfSiglaGender.requestFocus();
                 tfSiglaGender.setText("");
+
                 clear();
                 disabled();
                 btnDelete.setVisible(false);
                 btnUpdate.setVisible(false);
                 btnCancel.setVisible(false);
-
-                if (response == JOptionPane.YES_OPTION) {
-                    DAOGender.remover(gender);
+                btnSearch.setVisible(true);
+                if(response == JOptionPane.YES_OPTION) {
+                    daoGender.remover(gender);
                 }
 
             }
         });
 
-        btnList.addActionListener(new ActionListener() {
+       btnList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
 
-                List<Gender> genderList = DAOGender.list();
-                String[] col = {"Sigla do Gênero", "Gênero Completo"};
+                List<Gender> genderList = daoGender.list();
+                String[] col = {"Sigla Gender", "Full Gender"};
                 Object[][] data = new Object[genderList.size()][col.length];
                 String aux[];
 
@@ -279,13 +279,13 @@ public class GenderGUI extends JDialog {
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                tfSiglaGender.setText("");
-                tfSiglaGender.requestFocus();
+
                 tfSiglaGender.setEnabled(true);
                 tfSiglaGender.setEditable(true);
+                tfSiglaGender.setText("");
 
-                clear();
                 disabled();
+                clear();
 
                 btnCreate.setVisible(false);
                 btnUpdate.setVisible(false);
@@ -298,7 +298,7 @@ public class GenderGUI extends JDialog {
         });
 
         setModal(true);
-        setSize(600, 250);
+        setSize(600,250);
         setLocationRelativeTo(null);
         setVisible(true);
     }

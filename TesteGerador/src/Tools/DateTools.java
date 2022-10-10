@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author JoaoAN2
+ * @author zorawski
  * 
  */
 public class DateTools {

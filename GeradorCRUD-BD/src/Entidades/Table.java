@@ -11,6 +11,8 @@ public class Table {
     private String tableNameBD;
     private String tableNameJava;
     private List<Atribute> atributes;
+    private boolean hasFK = false;
+    private boolean hasDate = false;
 
     public Table() {
     }
@@ -52,6 +54,22 @@ public class Table {
             }
         }
         return null;
+    }
+
+    public boolean isHasFK() {
+        return hasFK;
+    }
+
+    public void setHasFK(boolean hasFK) {
+        this.hasFK = hasFK;
+    }
+
+    public boolean isHasDate() {
+        return hasDate;
+    }
+
+    public void setHasDate(boolean hasDate) {
+        this.hasDate = hasDate;
     }
 
     @Override

@@ -4,10 +4,10 @@ import Entidades.Atribute;
 import Entidades.JDBC;
 import Entidades.Table;
 import GUIs.GUI;
-import Geradores.GeradorDeDAO;
-import Geradores.GeradorDeEntidades;
-import Geradores.GeradorDeGUI;
-import Geradores.GeradorDeMenu;
+import Generator.GeradorDeDAO;
+import Generator.GeradorDeEntidades;
+import Generator.GeradorDeGUI;
+import Generator.GeradorDeMenu;
 import Tools.StringTools;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -68,15 +68,19 @@ public class Generate {
                         + "FROM information_schema.KEY_COLUMN_USAGE\n"
                         + "WHERE REFERENCED_TABLE_NAME = '" + tables.get(i).getTableNameBD() + "'");
                 while (rsFK.next()) {
-                    Table tableFK = jdbc.getTableByName(rsFK.getString("table_name"));
-                    Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString("column_name"));
-                    atributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
-                    atributeFK.setOriginNameFK(rsFK.getString("referenced_column_name"));
+                    try {
+                        Table tableFK = jdbc.getTableByName(rsFK.getString("table_name"));
+                        Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString("column_name"));
+                        atributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
+                        atributeFK.setOriginNameFK(rsFK.getString("referenced_column_name"));
+                    } catch (Exception e) {
+                        System.out.println("Algum erro");
+                    }
                 }
             }
 
             for (int i = 0; i < tables.size(); i++) {
-                GeradorDeGUI geradorDeGUI = new GeradorDeGUI(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes());
+                GeradorDeGUI geradorDeGUI = new GeradorDeGUI(tables.get(i));
                 GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes(), tables.get(i).getTableNameBD());
                 GeradorDeEntidades geradorDeEntidades = new GeradorDeEntidades(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes());
             }
@@ -84,7 +88,6 @@ public class Generate {
         } catch (SQLException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
 }

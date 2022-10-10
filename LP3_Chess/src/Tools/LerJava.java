@@ -13,19 +13,7 @@ public class LerJava {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        /**
-         * List<String> atributos = new ArrayList(); // Lista de atributos.
-         * String className = "Cargo"; // Nome da classe.
-         *
-         * // Atributos da classe. atributos.add("int;idFunction;11");
-         * atributos.add("String;nome_functionl;45");
-         *
-         * @Column(name = "sigla_federation") 
-         * private String siglaFederation;
-         *
-         *
-         */
+        
         String path = "src/Entidades/Federation.java";
         String nameFile = path.split("/")[path.split("/").length - 1];
         List<String> atributos = new ArrayList();

@@ -19,14 +19,4 @@ public class Connect {
         
     }
 
-    public Connect(JDBC jdbc) {
-        jdbc.setHostName("localhost");
-        jdbc.setUserName("root");
-        jdbc.setPassword("2na7N#tU");
-        jdbc.setJdbcDriver("com.mysql.cj.jdbc.Driver");
-        jdbc.setDataBaseName("chess");
-        jdbc.setDataBasePrefix("jdbc:mysql://");
-        jdbc.setDataBasePort("3306");
-    }
-
 }
