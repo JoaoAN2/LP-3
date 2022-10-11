@@ -30,13 +30,14 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
  /**
- * @author JoaoAN2 01/10/2022 - 18:59:40
+ * @author JoaoAN2 10/10/2022 - 23:59:18
  */
 
 public class RefereeGUI extends JDialog {
+    String action;
+
     Referee referee = new Referee();
     DAOReferee daoReferee = new DAOReferee();
-    String action;
 
     DAOPlayer daoPlayer = new DAOPlayer();
     DefaultComboBoxModel cbPlayerModel = new DefaultComboBoxModel();
@@ -62,10 +63,10 @@ public class RefereeGUI extends JDialog {
     JPanel pnEmpty = new JPanel(new GridLayout(6, 1));
     JButton btnSearch = new JButton("Buscar");
     JButton btnCreate = new JButton("Adicionar");
-    JButton btnSave = new JButton("Salvar");
-    JButton btnUpdate = new JButton("Alterar");
     JButton btnDelete = new JButton("Excluir");
     JButton btnList = new JButton("Listar");
+    JButton btnUpdate = new JButton("Alterar");
+    JButton btnSave = new JButton("Salvar");
     JButton btnCancel = new JButton("Cancelar");
 
     JLabel lbPlayerIdPlayer = new JLabel("Player Id Player");
@@ -108,14 +109,14 @@ public class RefereeGUI extends JDialog {
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
-        pnNorth.add(btnUpdate);
         pnNorth.add(btnDelete);
+        btnCreate.setVisible(false);
+        btnDelete.setVisible(false);
+
+        pnNorth.add(btnUpdate);
         pnNorth.add(btnSave);
         pnNorth.add(btnCancel);
-
-        btnCreate.setVisible(false);
         btnUpdate.setVisible(false);
-        btnDelete.setVisible(false);
         btnSave.setVisible(false);
         btnCancel.setVisible(false);
 
@@ -150,15 +151,16 @@ public class RefereeGUI extends JDialog {
                 referee = daoReferee.obter(((Player) cbPlayer.getSelectedItem()).getIdPlayer());
 
                 if (referee != null) {
-                    btnCreate.setVisible(false);
-                    btnUpdate.setVisible(true);
-                    btnDelete.setVisible(true);
 
+                    btnCreate.setVisible(false);
+                    btnDelete.setVisible(true);
+                    btnUpdate.setVisible(true);
                     cbCatReferee.setSelectedItem(referee.getCatRefereeIdReferee());
                 } else {
                     clear();
-                    btnCreate.setVisible(true);
                     btnUpdate.setVisible(false);
+
+                    btnCreate.setVisible(true);
                     btnDelete.setVisible(false);
                 }
             }
@@ -169,15 +171,83 @@ public class RefereeGUI extends JDialog {
             public void actionPerformed(ActionEvent ae) {
 
                 cbPlayer.setEnabled(false);
-                enabled();
-
-                btnSearch.setVisible(false);
                 btnCreate.setVisible(false);
+                action = "create";
+                enabled();
+                btnSearch.setVisible(false);
+                btnList.setVisible(false);
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
-                btnList.setVisible(false);
 
-                action = "create";
+
+            }
+        });
+
+       btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                int response = JOptionPane.showConfirmDialog(
+                        cp,
+                        "Tem certeza que deseja excluir?",
+                        "Confirmar",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                cbPlayer.setEnabled(true);
+                cbPlayer.setEditable(true);
+
+                btnDelete.setVisible(false);
+                btnSearch.setVisible(true);
+
+                clear();
+                disabled();
+                btnUpdate.setVisible(false);
+                btnCancel.setVisible(false);
+
+                if(response == JOptionPane.YES_OPTION) {
+
+                    daoReferee.remover(referee);
+
+                }
+
+            }
+        });
+
+       btnList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                List<Referee> refereeList = daoReferee.list();
+                String[] col = {"Player Id Player", "Cat Referee Id Referee"};
+                Object[][] data = new Object[refereeList.size()][col.length];
+
+                String aux[];
+
+                for (int i = 0; i < refereeList.size(); i++) {
+                    aux = refereeList.get(i).toString().split(";");
+                    for (int j = 0; j < col.length; j++) {
+                        try {
+                            data[i][j] = aux[j];
+                        } catch (Exception e) {
+                            data[i][j] = "null";
+                        }
+                    }
+                }
+                cardLayout.show(pnSouth, "list");
+
+                scrollTable.setPreferredSize(table.getPreferredSize());
+                pnList.add(table);
+                pnList.add(scrollTable);
+                scrollTable.setViewportView(table);
+                model.setDataVector(data, col);
+
+                btnCreate.setVisible(false);
+                btnDelete.setVisible(false);
+
+                btnUpdate.setVisible(false);
+
             }
         });
 
@@ -231,64 +301,6 @@ public class RefereeGUI extends JDialog {
                 enabled();
 
                 action = "update";
-            }
-        });
-
-       btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                int response = JOptionPane.showConfirmDialog(
-                        cp,
-                        "Tem certeza que deseja excluir?",
-                        "Confirmar",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                );
-
-                cbPlayer.setEnabled(true);
-                cbPlayer.setEditable(true);
-
-                clear();
-                disabled();
-                btnDelete.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnCancel.setVisible(false);
-                btnSearch.setVisible(true);
-                if(response == JOptionPane.YES_OPTION) {
-                    daoReferee.remover(referee);
-                }
-
-            }
-        });
-
-       btnList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                List<Referee> refereeList = daoReferee.list();
-                String[] col = {"Player Id Player", "Cat Referee Id Referee"};
-                Object[][] data = new Object[refereeList.size()][col.length];
-                String aux[];
-
-                for (int i = 0; i < refereeList.size(); i++) {
-                    aux = refereeList.get(i).toString().split(";");
-                    for (int j = 0; j < col.length; j++) {
-                        data[i][j] = aux[j];
-                    }
-                }
-
-                cardLayout.show(pnSouth, "list");
-
-                scrollTable.setPreferredSize(table.getPreferredSize());
-                pnList.add(table);
-                pnList.add(scrollTable);
-                scrollTable.setViewportView(table);
-                model.setDataVector(data, col);
-
-                btnCreate.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnDelete.setVisible(false);
             }
         });
 

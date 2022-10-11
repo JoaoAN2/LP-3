@@ -24,13 +24,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
  /**
- * @author JoaoAN2 01/10/2022 - 18:59:41
+ * @author JoaoAN2 10/10/2022 - 23:59:18
  */
 
 public class TitleGUI extends JDialog {
+    String action;
+
     Title title = new Title();
     DAOTitle daoTitle = new DAOTitle();
-    String action;
 
     Container cp;
     JPanel pnNorth = new JPanel();
@@ -48,10 +49,10 @@ public class TitleGUI extends JDialog {
     JPanel pnEmpty = new JPanel(new GridLayout(6, 1));
     JButton btnSearch = new JButton("Buscar");
     JButton btnCreate = new JButton("Adicionar");
-    JButton btnSave = new JButton("Salvar");
-    JButton btnUpdate = new JButton("Alterar");
     JButton btnDelete = new JButton("Excluir");
     JButton btnList = new JButton("Listar");
+    JButton btnUpdate = new JButton("Alterar");
+    JButton btnSave = new JButton("Salvar");
     JButton btnCancel = new JButton("Cancelar");
 
     JLabel lbSiglaTitle = new JLabel("Sigla Title");
@@ -99,14 +100,14 @@ public class TitleGUI extends JDialog {
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
-        pnNorth.add(btnUpdate);
         pnNorth.add(btnDelete);
+        btnCreate.setVisible(false);
+        btnDelete.setVisible(false);
+
+        pnNorth.add(btnUpdate);
         pnNorth.add(btnSave);
         pnNorth.add(btnCancel);
-
-        btnCreate.setVisible(false);
         btnUpdate.setVisible(false);
-        btnDelete.setVisible(false);
         btnSave.setVisible(false);
         btnCancel.setVisible(false);
 
@@ -131,15 +132,16 @@ public class TitleGUI extends JDialog {
                 title = daoTitle.obter(tfSiglaTitle.getText());
 
                 if (title != null) {
-                    btnCreate.setVisible(false);
-                    btnUpdate.setVisible(true);
-                    btnDelete.setVisible(true);
 
+                    btnCreate.setVisible(false);
+                    btnDelete.setVisible(true);
+                    btnUpdate.setVisible(true);
                     tfNameTitle.setText(title.getNameTitle());
                 } else {
                     clear();
-                    btnCreate.setVisible(true);
                     btnUpdate.setVisible(false);
+
+                    btnCreate.setVisible(true);
                     btnDelete.setVisible(false);
                 }
             }
@@ -152,15 +154,84 @@ public class TitleGUI extends JDialog {
                 tfNameTitle.requestFocus();
 
                 tfSiglaTitle.setEnabled(false);
-                enabled();
-
-                btnSearch.setVisible(false);
                 btnCreate.setVisible(false);
+                action = "create";
+                enabled();
+                btnSearch.setVisible(false);
+                btnList.setVisible(false);
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
-                btnList.setVisible(false);
 
-                action = "create";
+
+            }
+        });
+
+       btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                int response = JOptionPane.showConfirmDialog(
+                        cp,
+                        "Tem certeza que deseja excluir?",
+                        "Confirmar",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                tfSiglaTitle.setEnabled(true);
+                tfSiglaTitle.setEditable(true);
+                tfSiglaTitle.setText("");
+
+                btnDelete.setVisible(false);
+                btnSearch.setVisible(true);
+
+                clear();
+                disabled();
+                btnUpdate.setVisible(false);
+                btnCancel.setVisible(false);
+
+                if(response == JOptionPane.YES_OPTION) {
+
+                    daoTitle.remover(title);
+
+                }
+
+            }
+        });
+
+       btnList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                List<Title> titleList = daoTitle.list();
+                String[] col = {"Sigla Title", "Name Title"};
+                Object[][] data = new Object[titleList.size()][col.length];
+
+                String aux[];
+
+                for (int i = 0; i < titleList.size(); i++) {
+                    aux = titleList.get(i).toString().split(";");
+                    for (int j = 0; j < col.length; j++) {
+                        try {
+                            data[i][j] = aux[j];
+                        } catch (Exception e) {
+                            data[i][j] = "null";
+                        }
+                    }
+                }
+                cardLayout.show(pnSouth, "list");
+
+                scrollTable.setPreferredSize(table.getPreferredSize());
+                pnList.add(table);
+                pnList.add(scrollTable);
+                scrollTable.setViewportView(table);
+                model.setDataVector(data, col);
+
+                btnCreate.setVisible(false);
+                btnDelete.setVisible(false);
+
+                btnUpdate.setVisible(false);
+
             }
         });
 
@@ -214,65 +285,6 @@ public class TitleGUI extends JDialog {
                 enabled();
 
                 action = "update";
-            }
-        });
-
-       btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                int response = JOptionPane.showConfirmDialog(
-                        cp,
-                        "Tem certeza que deseja excluir?",
-                        "Confirmar",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                );
-
-                tfSiglaTitle.setEnabled(true);
-                tfSiglaTitle.setEditable(true);
-                tfSiglaTitle.setText("");
-
-                clear();
-                disabled();
-                btnDelete.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnCancel.setVisible(false);
-                btnSearch.setVisible(true);
-                if(response == JOptionPane.YES_OPTION) {
-                    daoTitle.remover(title);
-                }
-
-            }
-        });
-
-       btnList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                List<Title> titleList = daoTitle.list();
-                String[] col = {"Sigla Title", "Name Title"};
-                Object[][] data = new Object[titleList.size()][col.length];
-                String aux[];
-
-                for (int i = 0; i < titleList.size(); i++) {
-                    aux = titleList.get(i).toString().split(";");
-                    for (int j = 0; j < col.length; j++) {
-                        data[i][j] = aux[j];
-                    }
-                }
-
-                cardLayout.show(pnSouth, "list");
-
-                scrollTable.setPreferredSize(table.getPreferredSize());
-                pnList.add(table);
-                pnList.add(scrollTable);
-                scrollTable.setViewportView(table);
-                model.setDataVector(data, col);
-
-                btnCreate.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnDelete.setVisible(false);
             }
         });
 

@@ -1,6 +1,6 @@
 package Generator;
 
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import java.util.List;
  *
  * @author JoaoAN2
  */
-public class GeradorDeDAO {
+public class DAOsGenerator {
 
-    public GeradorDeDAO(String className, List<Atribute> atributos, String classNameBD) {
+    public DAOsGenerator(String className, List<Attribute> atributos, String classNameBD) {
         StringTools st = new StringTools();
         String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList();

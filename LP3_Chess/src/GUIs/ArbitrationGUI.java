@@ -192,7 +192,7 @@ public class ArbitrationGUI extends JDialog {
                     List<Tournament> refereeHasTournaments = daoReferee.obter(refereeAux.getPlayerIdPlayer()).getTournamentList();
                     for (int i = 0; i < refereeHasTournaments.size(); i++) {
                         data[i][0] = refereeHasTournaments.get(i).getCityIdTournament();
-                        data[i][1] = refereeAux.getPlayer().getNamePlayer();
+                        data[i][1] = refereeAux.getPlayerIdPlayer();
                     }
                 }
 

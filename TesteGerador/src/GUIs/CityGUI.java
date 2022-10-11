@@ -28,13 +28,14 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
  /**
- * @author JoaoAN2 01/10/2022 - 18:59:38
+ * @author JoaoAN2 10/10/2022 - 23:59:18
  */
 
 public class CityGUI extends JDialog {
+    String action;
+
     City city = new City();
     DAOCity daoCity = new DAOCity();
-    String action;
 
     DAOState daoState = new DAOState();
     DefaultComboBoxModel cbStateModel = new DefaultComboBoxModel();
@@ -56,10 +57,10 @@ public class CityGUI extends JDialog {
     JPanel pnEmpty = new JPanel(new GridLayout(6, 1));
     JButton btnSearch = new JButton("Buscar");
     JButton btnCreate = new JButton("Adicionar");
-    JButton btnSave = new JButton("Salvar");
-    JButton btnUpdate = new JButton("Alterar");
     JButton btnDelete = new JButton("Excluir");
     JButton btnList = new JButton("Listar");
+    JButton btnUpdate = new JButton("Alterar");
+    JButton btnSave = new JButton("Salvar");
     JButton btnCancel = new JButton("Cancelar");
 
     JLabel lbIdCity = new JLabel("Id City");
@@ -111,14 +112,14 @@ public class CityGUI extends JDialog {
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
-        pnNorth.add(btnUpdate);
         pnNorth.add(btnDelete);
+        btnCreate.setVisible(false);
+        btnDelete.setVisible(false);
+
+        pnNorth.add(btnUpdate);
         pnNorth.add(btnSave);
         pnNorth.add(btnCancel);
-
-        btnCreate.setVisible(false);
         btnUpdate.setVisible(false);
-        btnDelete.setVisible(false);
         btnSave.setVisible(false);
         btnCancel.setVisible(false);
 
@@ -151,16 +152,17 @@ public class CityGUI extends JDialog {
                 city = daoCity.obter(Integer.valueOf(tfIdCity.getText()));
 
                 if (city != null) {
-                    btnCreate.setVisible(false);
-                    btnUpdate.setVisible(true);
-                    btnDelete.setVisible(true);
 
+                    btnCreate.setVisible(false);
+                    btnDelete.setVisible(true);
+                    btnUpdate.setVisible(true);
                     tfNameCity.setText(city.getNameCity());
                     cbState.setSelectedItem(city.getStateSiglaCity());
                 } else {
                     clear();
-                    btnCreate.setVisible(true);
                     btnUpdate.setVisible(false);
+
+                    btnCreate.setVisible(true);
                     btnDelete.setVisible(false);
                 }
             }
@@ -173,15 +175,84 @@ public class CityGUI extends JDialog {
                 tfNameCity.requestFocus();
 
                 tfIdCity.setEnabled(false);
-                enabled();
-
-                btnSearch.setVisible(false);
                 btnCreate.setVisible(false);
+                action = "create";
+                enabled();
+                btnSearch.setVisible(false);
+                btnList.setVisible(false);
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
-                btnList.setVisible(false);
 
-                action = "create";
+
+            }
+        });
+
+       btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                int response = JOptionPane.showConfirmDialog(
+                        cp,
+                        "Tem certeza que deseja excluir?",
+                        "Confirmar",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                tfIdCity.setEnabled(true);
+                tfIdCity.setEditable(true);
+                tfIdCity.setText("");
+
+                btnDelete.setVisible(false);
+                btnSearch.setVisible(true);
+
+                clear();
+                disabled();
+                btnUpdate.setVisible(false);
+                btnCancel.setVisible(false);
+
+                if(response == JOptionPane.YES_OPTION) {
+
+                    daoCity.remover(city);
+
+                }
+
+            }
+        });
+
+       btnList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                List<City> cityList = daoCity.list();
+                String[] col = {"Id City", "Name City", "State Sigla City"};
+                Object[][] data = new Object[cityList.size()][col.length];
+
+                String aux[];
+
+                for (int i = 0; i < cityList.size(); i++) {
+                    aux = cityList.get(i).toString().split(";");
+                    for (int j = 0; j < col.length; j++) {
+                        try {
+                            data[i][j] = aux[j];
+                        } catch (Exception e) {
+                            data[i][j] = "null";
+                        }
+                    }
+                }
+                cardLayout.show(pnSouth, "list");
+
+                scrollTable.setPreferredSize(table.getPreferredSize());
+                pnList.add(table);
+                pnList.add(scrollTable);
+                scrollTable.setViewportView(table);
+                model.setDataVector(data, col);
+
+                btnCreate.setVisible(false);
+                btnDelete.setVisible(false);
+
+                btnUpdate.setVisible(false);
+
             }
         });
 
@@ -236,65 +307,6 @@ public class CityGUI extends JDialog {
                 enabled();
 
                 action = "update";
-            }
-        });
-
-       btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                int response = JOptionPane.showConfirmDialog(
-                        cp,
-                        "Tem certeza que deseja excluir?",
-                        "Confirmar",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                );
-
-                tfIdCity.setEnabled(true);
-                tfIdCity.setEditable(true);
-                tfIdCity.setText("");
-
-                clear();
-                disabled();
-                btnDelete.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnCancel.setVisible(false);
-                btnSearch.setVisible(true);
-                if(response == JOptionPane.YES_OPTION) {
-                    daoCity.remover(city);
-                }
-
-            }
-        });
-
-       btnList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                List<City> cityList = daoCity.list();
-                String[] col = {"Id City", "Name City", "State Sigla City"};
-                Object[][] data = new Object[cityList.size()][col.length];
-                String aux[];
-
-                for (int i = 0; i < cityList.size(); i++) {
-                    aux = cityList.get(i).toString().split(";");
-                    for (int j = 0; j < col.length; j++) {
-                        data[i][j] = aux[j];
-                    }
-                }
-
-                cardLayout.show(pnSouth, "list");
-
-                scrollTable.setPreferredSize(table.getPreferredSize());
-                pnList.add(table);
-                pnList.add(scrollTable);
-                scrollTable.setViewportView(table);
-                model.setDataVector(data, col);
-
-                btnCreate.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnDelete.setVisible(false);
             }
         });
 

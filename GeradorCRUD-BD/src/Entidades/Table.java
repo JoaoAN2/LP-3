@@ -10,17 +10,35 @@ public class Table {
 
     private String tableNameBD;
     private String tableNameJava;
-    private List<Atribute> atributes;
+    private List<Attribute> attributes;
     private boolean hasFK = false;
     private boolean hasDate = false;
+    private boolean hasAttribute = false;
+    private NxM nxm;
 
     public Table() {
     }
 
-    public Table(String tableNameBD, String tableNameJava, List<Atribute> atributes) {
-        this.tableNameBD = tableNameBD;
-        this.tableNameJava = tableNameJava;
-        this.atributes = atributes;
+    public Attribute getAttributeByName(String attributeName) {
+        for (int i = 0; i < this.attributes.size(); i++) {
+            if (attributeName.equals(attributes.get(i).getNameBD())) {
+                return attributes.get(i);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return tableNameBD + ";" + tableNameJava + ";" + attributes;
+    }
+
+    public boolean isHasAttribute() {
+        return hasAttribute;
+    }
+
+    public void setHasAttribute(boolean hasAttribute) {
+        this.hasAttribute = hasAttribute;
     }
 
     public String getTableNameBD() {
@@ -39,21 +57,12 @@ public class Table {
         this.tableNameJava = tableNameJava;
     }
 
-    public List<Atribute> getAtributes() {
-        return atributes;
+    public List<Attribute> getAttributes() {
+        return attributes;
     }
 
-    public void setAtributes(List<Atribute> atributes) {
-        this.atributes = atributes;
-    }
-
-    public Atribute getAtributeByName(String atributeName) {
-        for (int i = 0; i < this.atributes.size(); i++) {
-            if (atributeName.equals(atributes.get(i).getNameBD())) {
-                return atributes.get(i);
-            }
-        }
-        return null;
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
     }
 
     public boolean isHasFK() {
@@ -72,9 +81,12 @@ public class Table {
         this.hasDate = hasDate;
     }
 
-    @Override
-    public String toString() {
-        return tableNameBD + ";" + tableNameJava + ";" + atributes;
+    public NxM getNxm() {
+        return nxm;
+    }
+
+    public void setNxm(NxM nxm) {
+        this.nxm = nxm;
     }
 
 }

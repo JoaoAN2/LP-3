@@ -1,10 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ToolsGUIGenerator;
 
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Entidades.Table;
 import Tools.StringTools;
 import java.util.List;
@@ -14,21 +10,24 @@ import java.util.List;
  * @author joaoan2
  */
 public class Imports {
-    
+
     StringTools st = new StringTools();
-    
-    public Imports(List<String> cg, List<Atribute> atributos, String className, String classNameMin, Table tableEntity) {
-        cg.add("import Entidades." + className + ";\n"
-                + "import DAOs.DAO" + className + ";");
+
+    public Imports(List<String> cg, Table tableEntity) {
+
+        List<Attribute> atributos = tableEntity.getAttributes();
+        String className = st.firstLetterToUpperCase(tableEntity.getTableNameJava());
+
+        if (tableEntity.isHasAttribute()) {
+            cg.add("import Entidades." + className + ";\n"
+                    + "import DAOs.DAO" + className + ";");
+        }
 
         for (int i = 0; i < atributos.size(); i++) {
             if (atributos.get(i).getOriginTableFK() != null) {
                 cg.add("import Entidades." + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ";\n"
                         + "import DAOs.DAO" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ";");
                 tableEntity.setHasFK(true);
-            }
-            if (atributos.get(i).getTypeJava().equals("Date")) {
-                tableEntity.setHasDate(true);
             }
         }
 
@@ -63,5 +62,5 @@ public class Imports {
             cg.add("import Tools.DateTools;");
         }
     }
-    
+
 }

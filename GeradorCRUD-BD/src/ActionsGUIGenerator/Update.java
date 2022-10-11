@@ -1,6 +1,6 @@
 package ActionsGUIGenerator;
 
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Tools.StringTools;
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class Update {
     
     StringTools st = new StringTools();
     
-    public Update(List<String> cg, List<Atribute> atributos) {
+    public Update(List<String> cg, List<Attribute> atributos) {
         cg.add("       btnUpdate.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n"

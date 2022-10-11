@@ -1,6 +1,6 @@
 package Generator;
 
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import java.util.List;
  *
  * @author JoaoAN2
  */
-public class GeradorDeEntidades {
+public class EntitiesGenerator {
 
-    public GeradorDeEntidades(String className, List<Atribute> atributes) {
+    public EntitiesGenerator(String className, List<Attribute> attributes) {
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
         List<String> cg = new ArrayList(); // Código Gerado
@@ -21,8 +21,8 @@ public class GeradorDeEntidades {
         if (manipulaArquivo.existeOArquivo(path)) {
 
             boolean hasDate = false;
-            for (int i = 0; i < atributes.size(); i++) {
-                if (atributes.get(i).getTypeJava().equals("Date")) {
+            for (int i = 0; i < attributes.size(); i++) {
+                if (attributes.get(i).getTypeJava().equals("Date")) {
                     hasDate = true;
                     break;
                 }
@@ -43,19 +43,19 @@ public class GeradorDeEntidades {
                         cg.add("        DateTools dt = new DateTools();");
                     }
 
-                    for (int j = 0; j < atributes.size(); j++) {
+                    for (int j = 0; j < attributes.size(); j++) {
 
-                        if (atributes.get(j).getTypeJava().equals("Date")) {
+                        if (attributes.get(j).getTypeJava().equals("Date")) {
                             toString += "dt.conversionDateToString(";
                         }
 
-                        if (atributes.get(j).getOriginTableFK() == null) {
-                            toString += atributes.get(j).getNameJava();
+                        if (attributes.get(j).getOriginTableFK() == null) {
+                            toString += attributes.get(j).getNameJava();
                         } else {
-                            toString += atributes.get(j).getNameJava() + ".get" + st.firstLetterToUpperCase(st.bdToJava(atributes.get(j).getOriginNameFK())) + "()";
+                            toString += attributes.get(j).getNameJava() + ".get" + st.firstLetterToUpperCase(st.bdToJava(attributes.get(j).getOriginNameFK())) + "()";
                         }
 
-                        if (atributes.get(j).getTypeJava().equals("Date")) {
+                        if (attributes.get(j).getTypeJava().equals("Date")) {
                             toString += ")";
                         }
 

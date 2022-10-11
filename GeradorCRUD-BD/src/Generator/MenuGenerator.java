@@ -12,9 +12,9 @@ import java.util.List;
  *
  * @author JoaoAN2
  */
-public class GeradorDeMenu {
+public class MenuGenerator {
 
-    public GeradorDeMenu(List<Table> tables, String bdName) {
+    public MenuGenerator(List<Table> tables, String bdName) {
         List<String> cg = new ArrayList();
         StringTools st = new StringTools();
         cg.add("package GUIs;\n");

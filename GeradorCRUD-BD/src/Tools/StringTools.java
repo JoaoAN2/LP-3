@@ -62,7 +62,7 @@ public class StringTools {
         return typeJava;
     }
     
-    public int sizeAtributes(String type) {
+    public int sizeAttributes(String type) {
         int size = 0;
         if (type.contains("varchar(")) {
             size =  Integer.valueOf(type.substring(type.indexOf("(") + 1, type.length() -1));

@@ -33,13 +33,14 @@ import javax.swing.JComboBox;
 import Tools.DateTools;
 
  /**
- * @author JoaoAN2 01/10/2022 - 18:59:39
+ * @author JoaoAN2 10/10/2022 - 23:59:18
  */
 
 public class PlayerGUI extends JDialog {
+    String action;
+
     Player player = new Player();
     DAOPlayer daoPlayer = new DAOPlayer();
-    String action;
 
     DateTools dt = new DateTools();
 
@@ -71,10 +72,10 @@ public class PlayerGUI extends JDialog {
     JPanel pnEmpty = new JPanel(new GridLayout(6, 1));
     JButton btnSearch = new JButton("Buscar");
     JButton btnCreate = new JButton("Adicionar");
-    JButton btnSave = new JButton("Salvar");
-    JButton btnUpdate = new JButton("Alterar");
     JButton btnDelete = new JButton("Excluir");
     JButton btnList = new JButton("Listar");
+    JButton btnUpdate = new JButton("Alterar");
+    JButton btnSave = new JButton("Salvar");
     JButton btnCancel = new JButton("Cancelar");
 
     JLabel lbIdPlayer = new JLabel("Id Player");
@@ -155,14 +156,14 @@ public class PlayerGUI extends JDialog {
         pnNorth.add(btnSearch);
         pnNorth.add(btnList);
         pnNorth.add(btnCreate);
-        pnNorth.add(btnUpdate);
         pnNorth.add(btnDelete);
+        btnCreate.setVisible(false);
+        btnDelete.setVisible(false);
+
+        pnNorth.add(btnUpdate);
         pnNorth.add(btnSave);
         pnNorth.add(btnCancel);
-
-        btnCreate.setVisible(false);
         btnUpdate.setVisible(false);
-        btnDelete.setVisible(false);
         btnSave.setVisible(false);
         btnCancel.setVisible(false);
 
@@ -220,10 +221,10 @@ public class PlayerGUI extends JDialog {
                 player = daoPlayer.obter(Integer.valueOf(tfIdPlayer.getText()));
 
                 if (player != null) {
-                    btnCreate.setVisible(false);
-                    btnUpdate.setVisible(true);
-                    btnDelete.setVisible(true);
 
+                    btnCreate.setVisible(false);
+                    btnDelete.setVisible(true);
+                    btnUpdate.setVisible(true);
                     tfNamePlayer.setText(player.getNamePlayer());
                     tfPointsPlayer.setText(String.valueOf(player.getPointsPlayer()));
                     tfBirthdayPlayer.setText(dt.conversionDateToString(player.getBirthdayPlayer()));
@@ -233,8 +234,9 @@ public class PlayerGUI extends JDialog {
                     tfProfilePictureUrl.setText(player.getProfilePictureUrl());
                 } else {
                     clear();
-                    btnCreate.setVisible(true);
                     btnUpdate.setVisible(false);
+
+                    btnCreate.setVisible(true);
                     btnDelete.setVisible(false);
                 }
             }
@@ -247,15 +249,84 @@ public class PlayerGUI extends JDialog {
                 tfNamePlayer.requestFocus();
 
                 tfIdPlayer.setEnabled(false);
-                enabled();
-
-                btnSearch.setVisible(false);
                 btnCreate.setVisible(false);
+                action = "create";
+                enabled();
+                btnSearch.setVisible(false);
+                btnList.setVisible(false);
                 btnSave.setVisible(true);
                 btnCancel.setVisible(true);
-                btnList.setVisible(false);
 
-                action = "create";
+
+            }
+        });
+
+       btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                int response = JOptionPane.showConfirmDialog(
+                        cp,
+                        "Tem certeza que deseja excluir?",
+                        "Confirmar",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                tfIdPlayer.setEnabled(true);
+                tfIdPlayer.setEditable(true);
+                tfIdPlayer.setText("");
+
+                btnDelete.setVisible(false);
+                btnSearch.setVisible(true);
+
+                clear();
+                disabled();
+                btnUpdate.setVisible(false);
+                btnCancel.setVisible(false);
+
+                if(response == JOptionPane.YES_OPTION) {
+
+                    daoPlayer.remover(player);
+
+                }
+
+            }
+        });
+
+       btnList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+
+                List<Player> playerList = daoPlayer.list();
+                String[] col = {"Id Player", "Name Player", "Points Player", "Birthday Player", "Federation Sigla Player", "Gender Sigla Player", "Title Sigla Player", "Profile Picture Url"};
+                Object[][] data = new Object[playerList.size()][col.length];
+
+                String aux[];
+
+                for (int i = 0; i < playerList.size(); i++) {
+                    aux = playerList.get(i).toString().split(";");
+                    for (int j = 0; j < col.length; j++) {
+                        try {
+                            data[i][j] = aux[j] == null ? "null" : aux[j];
+                        } catch (Exception e) {
+                            data[i][j] = "null";
+                        }
+                    }
+                }
+                cardLayout.show(pnSouth, "list");
+
+                scrollTable.setPreferredSize(table.getPreferredSize());
+                pnList.add(table);
+                pnList.add(scrollTable);
+                scrollTable.setViewportView(table);
+                model.setDataVector(data, col);
+
+                btnCreate.setVisible(false);
+                btnDelete.setVisible(false);
+
+                btnUpdate.setVisible(false);
+
             }
         });
 
@@ -315,65 +386,6 @@ public class PlayerGUI extends JDialog {
                 enabled();
 
                 action = "update";
-            }
-        });
-
-       btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                int response = JOptionPane.showConfirmDialog(
-                        cp,
-                        "Tem certeza que deseja excluir?",
-                        "Confirmar",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                );
-
-                tfIdPlayer.setEnabled(true);
-                tfIdPlayer.setEditable(true);
-                tfIdPlayer.setText("");
-
-                clear();
-                disabled();
-                btnDelete.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnCancel.setVisible(false);
-                btnSearch.setVisible(true);
-                if(response == JOptionPane.YES_OPTION) {
-                    daoPlayer.remover(player);
-                }
-
-            }
-        });
-
-       btnList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                List<Player> playerList = daoPlayer.list();
-                String[] col = {"Id Player", "Name Player", "Points Player", "Birthday Player", "Federation Sigla Player", "Gender Sigla Player", "Title Sigla Player", "Profile Picture Url"};
-                Object[][] data = new Object[playerList.size()][col.length];
-                String aux[];
-
-                for (int i = 0; i < playerList.size(); i++) {
-                    aux = playerList.get(i).toString().split(";");
-                    for (int j = 0; j < col.length; j++) {
-                        data[i][j] = aux[j];
-                    }
-                }
-
-                cardLayout.show(pnSouth, "list");
-
-                scrollTable.setPreferredSize(table.getPreferredSize());
-                pnList.add(table);
-                pnList.add(scrollTable);
-                scrollTable.setViewportView(table);
-                model.setDataVector(data, col);
-
-                btnCreate.setVisible(false);
-                btnUpdate.setVisible(false);
-                btnDelete.setVisible(false);
             }
         });
 

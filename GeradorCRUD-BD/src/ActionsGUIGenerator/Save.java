@@ -1,6 +1,6 @@
 package ActionsGUIGenerator;
 
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Tools.StringTools;
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class Save {
     
     StringTools st = new StringTools();
     
-    public Save(List<String> cg, List<Atribute> atributos, String className, String classNameMin) {
+    public Save(List<String> cg, List<Attribute> atributos, String className, String classNameMin) {
         cg.add("       btnSave.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n"

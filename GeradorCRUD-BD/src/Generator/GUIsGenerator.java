@@ -7,8 +7,9 @@ import ActionsGUIGenerator.ListAction;
 import ActionsGUIGenerator.Read;
 import ActionsGUIGenerator.Save;
 import ActionsGUIGenerator.Update;
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Entidades.Table;
+import Entidades.NxM;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
 import ToolsGUIGenerator.Buttons;
@@ -22,34 +23,49 @@ import java.util.List;
 /**
  * @author JoaoAN2
  */
-public class GeradorDeGUI {
+public class GUIsGenerator {
 
-    public GeradorDeGUI(Table tableEntity) {
+    public GUIsGenerator(Table tableEntity) {
         StringTools st = new StringTools();
-        List<Atribute> atributos = tableEntity.getAtributes();
-        String className = tableEntity.getTableNameJava();
+        List<Attribute> atributos = tableEntity.getAttributes();
+        String className = st.firstLetterToUpperCase(tableEntity.getTableNameJava());
         String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList(); // Código gerado
-        int numberAtributes = 0;
+        int numberAttributes = 0;
         int numberPK = 0;
 
         for (int i = 0; i < atributos.size(); i++) {
             if (atributos.get(i).getKey().equals("PRI")) {
                 numberPK++;
             } else {
-                numberAtributes++;
+                numberAttributes++;
             }
+
+            if (atributos.get(i).getTypeJava().equals("Date")) {
+                tableEntity.setHasDate(true);
+            }
+        }
+
+        tableEntity.setHasAttribute(numberAttributes > 0);
+
+        if (!tableEntity.isHasAttribute() && numberPK >= 2) {
+            NxM nxm = new NxM();
+            nxm.setMainAndSecondAttribute(atributos.get(0), atributos.get(1));
+            tableEntity.setNxm(nxm);
         }
 
         cg.add("package GUIs;\n");
 
-        Imports imports = new Imports(cg, atributos, className, classNameMin, tableEntity);
+        Imports imports = new Imports(cg, tableEntity);
         cg.add("\n /**\n * @author JoaoAN2 " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date()) + "\n */\n");
         cg.add("public class " + className + "GUI extends JDialog {\n"
-                + "    " + className + " " + classNameMin + " = new " + className + "();\n"
-                + "    DAO" + className + " dao" + className + " = new DAO" + className + "();\n"
-                + "    String action;\n"
-        );
+                + "    String action;\n");
+
+        if (tableEntity.isHasAttribute()) {
+            cg.add("    " + className + " " + classNameMin + " = new " + className + "();\n"
+                    + "    DAO" + className + " dao" + className + " = new DAO" + className + "();\n"
+            );
+        }
 
         if (tableEntity.isHasDate()) {
             cg.add("    DateTools dt = new DateTools();\n");
@@ -58,6 +74,9 @@ public class GeradorDeGUI {
         if (tableEntity.isHasFK()) {
             for (int i = 0; i < atributos.size(); i++) {
                 if (atributos.get(i).getOriginTableFK() != null) {
+                    if (!tableEntity.isHasAttribute()) {
+                        cg.add("    " + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + " " + st.bdToJava(atributos.get(i).getOriginTableFK()) + " = new " + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + "();");
+                    }
                     cg.add(
                             "    DAO" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + " dao" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + " = new DAO" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + "();\n"
                             + "    DefaultComboBoxModel cb" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + "Model = new DefaultComboBoxModel();\n"
@@ -75,7 +94,7 @@ public class GeradorDeGUI {
 
         // Paineís
         Panels panels = new Panels(cg, parametroColunas);
-        Buttons buttons = new Buttons(cg);
+        Buttons buttons = new Buttons(cg, tableEntity);
 
         // Labels e TextFields
         for (int i = 0; i < atributos.size(); i++) {
@@ -86,40 +105,42 @@ public class GeradorDeGUI {
             }
         }
 
-        cg.add("    private List<" + className + "> list = new ArrayList<>();\n");
+        if (tableEntity.isHasAttribute()) {
+            cg.add("    private List<" + className + "> list = new ArrayList<>();\n");
 
-        // Funções
-        cg.add("    public void clear() {");
-        for (int i = 1; i < atributos.size(); i++) {
-            if (atributos.get(i).getOriginTableFK() == null) {
-                cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(\"\");");
-            }
-        }
-        cg.add("    }\n");
-
-        cg.add("    public void enabled() {");
-        for (int i = 0; i < atributos.size(); i++) {
-            if (!atributos.get(i).getKey().equals("PRI")) {
+            // Funções
+            cg.add("    public void clear() {");
+            for (int i = 1; i < atributos.size(); i++) {
                 if (atributos.get(i).getOriginTableFK() == null) {
-                    cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(true);");
-                } else {
-                    cg.add("        cb" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ".setEnabled(true);");
+                    cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setText(\"\");");
                 }
             }
-        }
-        cg.add("    }\n");
+            cg.add("    }\n");
 
-        cg.add("    public void disabled() {");
-        for (int i = 0; i < atributos.size(); i++) {
-            if (!atributos.get(i).getKey().equals("PRI")) {
-                if (atributos.get(i).getOriginTableFK() == null) {
-                    cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(false);");
-                } else {
-                    cg.add("        cb" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ".setEnabled(false);");
+            cg.add("    public void enabled() {");
+            for (int i = 0; i < atributos.size(); i++) {
+                if (!atributos.get(i).getKey().equals("PRI")) {
+                    if (atributos.get(i).getOriginTableFK() == null) {
+                        cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(true);");
+                    } else {
+                        cg.add("        cb" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ".setEnabled(true);");
+                    }
                 }
             }
+            cg.add("    }\n");
+
+            cg.add("    public void disabled() {");
+            for (int i = 0; i < atributos.size(); i++) {
+                if (!atributos.get(i).getKey().equals("PRI")) {
+                    if (atributos.get(i).getOriginTableFK() == null) {
+                        cg.add("        tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + ".setEditable(false);");
+                    } else {
+                        cg.add("        cb" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ".setEnabled(false);");
+                    }
+                }
+            }
+            cg.add("    }\n");
         }
-        cg.add("    }\n");
 
         // Construtor GUI
         cg.add("\n    public " + className + "GUI() {\n"
@@ -127,7 +148,7 @@ public class GeradorDeGUI {
                 + "        cp = getContentPane();\n"
                 + "        cp.setLayout(new BorderLayout());\n"
                 + "        setTitle(\"CRUD - " + className + "\");\n\n"
-                + "        pnCenter.setLayout(new GridLayout(" + numberAtributes + ", col.length - 1));\n"
+                + "        pnCenter.setLayout(new GridLayout(" + numberAttributes + ", col.length - 1));\n"
                 + "        pnNorth.setLayout(new FlowLayout(FlowLayout.LEFT));\n"
                 + "\n"
                 + "        cp.add(pnNorth, BorderLayout.NORTH);\n"
@@ -152,18 +173,20 @@ public class GeradorDeGUI {
         cg.add("        pnNorth.add(btnSearch);\n"
                 + "        pnNorth.add(btnList);\n"
                 + "        pnNorth.add(btnCreate);\n"
-                + "        pnNorth.add(btnUpdate);\n"
                 + "        pnNorth.add(btnDelete);\n"
-                + "        pnNorth.add(btnSave);\n"
-                + "        pnNorth.add(btnCancel);\n"
-                + "\n"
                 + "        btnCreate.setVisible(false);\n"
-                + "        btnUpdate.setVisible(false);\n"
-                + "        btnDelete.setVisible(false);\n"
-                + "        btnSave.setVisible(false);\n"
-                + "        btnCancel.setVisible(false);\n"
-                + "\n"
-                + "        disabled();\n");
+                + "        btnDelete.setVisible(false);\n");
+
+        if (tableEntity.isHasAttribute()) {
+            cg.add("        pnNorth.add(btnUpdate);\n"
+                    + "        pnNorth.add(btnSave);\n"
+                    + "        pnNorth.add(btnCancel);\n"
+                    + "        btnUpdate.setVisible(false);\n"
+                    + "        btnSave.setVisible(false);\n"
+                    + "        btnCancel.setVisible(false);\n"
+                    + "\n"
+                    + "        disabled();\n");
+        }
 
         for (int i = 0; i < atributos.size(); i++) {
             if (!atributos.get(i).getKey().equals("PRI")) {
@@ -191,14 +214,18 @@ public class GeradorDeGUI {
             }
         }
 
-        Read read = new Read(cg, atributos, className, classNameMin);
-        Create create = new Create(cg, atributos, numberPK);
-        Save save = new Save(cg, atributos, className, classNameMin);
-        Update update = new Update(cg, atributos);
-        Delete delete = new Delete(cg, atributos, className, classNameMin);
-        ListAction listAction = new ListAction(cg, parametroColunas, className, classNameMin);
-        Cancell cancell = new Cancell(cg, atributos);
+        // Botões
+        Read read = new Read(cg, atributos, className, classNameMin, tableEntity);
+        Create create = new Create(cg, atributos, numberPK, tableEntity);
+        Delete delete = new Delete(cg, atributos, className, classNameMin, tableEntity);
+        ListAction listAction = new ListAction(cg, parametroColunas, className, classNameMin, tableEntity);
 
+        if (tableEntity.isHasAttribute()) {
+            Save save = new Save(cg, atributos, className, classNameMin);
+            Update update = new Update(cg, atributos);
+            Cancell cancell = new Cancell(cg, atributos);
+        }
+        
         // CONFIGURAÇÕES DA GUI
         cg.add("        setModal(true);\n"
                 + "        setSize(600,250);\n"

@@ -4,7 +4,7 @@ package Entidades;
  *
  * @author JoaoAN2
  */
-public class Atribute {
+public class Attribute {
 
     private String nameJava;
     private String typeJava;
@@ -17,7 +17,7 @@ public class Atribute {
     private String originNameFK;
     private String labelName;
 
-    public Atribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size, String originTableFK, String originNameFK, String labelName) {
+    public Attribute(String nameJava, String typeJava, String nameBD, String typeBD, boolean isNull, String key, int size, String originTableFK, String originNameFK, String labelName) {
         this.nameJava = nameJava;
         this.typeJava = typeJava;
         this.nameBD = nameBD;
@@ -30,7 +30,7 @@ public class Atribute {
         this.labelName = labelName;
     }
 
-    public Atribute() {
+    public Attribute() {
     }
 
     public String getKey() {

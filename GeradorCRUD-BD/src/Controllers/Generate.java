@@ -1,13 +1,13 @@
 package Controllers;
 
-import Entidades.Atribute;
+import Entidades.Attribute;
 import Entidades.JDBC;
 import Entidades.Table;
 import GUIs.GUI;
-import Generator.GeradorDeDAO;
-import Generator.GeradorDeEntidades;
-import Generator.GeradorDeGUI;
-import Generator.GeradorDeMenu;
+import Generator.DAOsGenerator;
+import Generator.EntitiesGenerator;
+import Generator.GUIsGenerator;
+import Generator.MenuGenerator;
 import Tools.StringTools;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -39,21 +39,21 @@ public class Generate {
             }
 
             for (int i = 0; i < tables.size(); i++) {
-                List<Atribute> atributes = new ArrayList();
+                List<Attribute> attributes = new ArrayList();
                 ResultSet rsDesc = con.createStatement().executeQuery("DESC " + tables.get(i).getTableNameBD());
                 while (rsDesc.next()) {
-                    Atribute atribute = new Atribute();
-                    atribute.setNameJava(st.bdToJava(rsDesc.getString(1)));
-                    atribute.setTypeJava(st.convertTypeBDToJava(rsDesc.getString(2)));
-                    atribute.setNameBD(rsDesc.getString(1));
-                    atribute.setSize(st.sizeAtributes(rsDesc.getString(2)));
-                    atribute.setTypeBD(rsDesc.getString(2));
-                    atribute.setIsNull(rsDesc.getString(3).equals("YES"));
-                    atribute.setKey(rsDesc.getString(4));
-                    atribute.setLabelName(st.labelJava(rsDesc.getString(1)));
-                    atributes.add(atribute);
+                    Attribute attribute = new Attribute();
+                    attribute.setNameJava(st.bdToJava(rsDesc.getString(1)));
+                    attribute.setTypeJava(st.convertTypeBDToJava(rsDesc.getString(2)));
+                    attribute.setNameBD(rsDesc.getString(1));
+                    attribute.setSize(st.sizeAttributes(rsDesc.getString(2)));
+                    attribute.setTypeBD(rsDesc.getString(2));
+                    attribute.setIsNull(rsDesc.getString(3).equals("YES"));
+                    attribute.setKey(rsDesc.getString(4));
+                    attribute.setLabelName(st.labelJava(rsDesc.getString(1)));
+                    attributes.add(attribute);
                 }
-                tables.get(i).setAtributes(atributes);
+                tables.get(i).setAttributes(attributes);
 
             }
 
@@ -70,9 +70,9 @@ public class Generate {
                 while (rsFK.next()) {
                     try {
                         Table tableFK = jdbc.getTableByName(rsFK.getString("table_name"));
-                        Atribute atributeFK = tableFK.getAtributeByName(rsFK.getString("column_name"));
-                        atributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
-                        atributeFK.setOriginNameFK(rsFK.getString("referenced_column_name"));
+                        Attribute attributeFK = tableFK.getAttributeByName(rsFK.getString("column_name"));
+                        attributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
+                        attributeFK.setOriginNameFK(rsFK.getString("referenced_column_name"));
                     } catch (Exception e) {
                         System.out.println("Algum erro");
                     }
@@ -80,11 +80,11 @@ public class Generate {
             }
 
             for (int i = 0; i < tables.size(); i++) {
-                GeradorDeGUI geradorDeGUI = new GeradorDeGUI(tables.get(i));
-                GeradorDeDAO geradorDeDAO = new GeradorDeDAO(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes(), tables.get(i).getTableNameBD());
-                GeradorDeEntidades geradorDeEntidades = new GeradorDeEntidades(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAtributes());
+                GUIsGenerator geradorDeGUI = new GUIsGenerator(tables.get(i));
+                // DAOsGenerator geradorDeDAO = new DAOsGenerator(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAttributes(), tables.get(i).getTableNameBD());
+                // EntitiesGenerator geradorDeEntidades = new EntitiesGenerator(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAttributes());
             }
-            GeradorDeMenu geradorDeMenu = new GeradorDeMenu(tables, jdbc.getDataBaseName());
+            // MenuGenerator geradorDeMenu = new MenuGenerator(tables, jdbc.getDataBaseName());
         } catch (SQLException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
