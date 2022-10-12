@@ -18,9 +18,9 @@ public class ListAction {
                 + "            public void actionPerformed(ActionEvent ae) {\n"
         );
 
-        cg.add("                List<" + (tableEntity.isHasAttribute() ? className : st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK())) + "> " + (tableEntity.isHasAttribute() ? classNameMin : tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + "List = dao" + (tableEntity.isHasAttribute() ? className : st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK())) + ".list();\n"
+        cg.add("                List<" + (tableEntity.isHasAttribute() ? className : st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK())) + "> " + (tableEntity.isHasAttribute() ? classNameMin : tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + "List = dao" + (tableEntity.isHasAttribute() ? className : st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK())) + ".list();\n"
                 + "                String[] col = {" + parametroColunas + "};\n"
-                + "                Object[][] data = new Object[" + (tableEntity.isHasAttribute() ? classNameMin : tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + "List.size()][col.length];\n");
+                + "                Object[][] data = new Object[" + (tableEntity.isHasAttribute() ? classNameMin : tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + "List.size()][col.length];\n");
 
         cg.add(tableEntity.isHasAttribute()
                 ? "                String aux[];\n\n"
@@ -34,11 +34,11 @@ public class ListAction {
                 + "                        }\n"
                 + "                    }\n"
                 + "                }"
-                : "                for (" + st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + " " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Aux : " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "List) {\n"
-                + "                    List<" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "> " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "s = dao" + st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + ".obter(" + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Aux.getPlayerIdPlayer()).get" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "List();\n"
-                + "                    for (int i = 0; i < " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "s.size(); i++) {\n"
-                + "                        data[i][0] = " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "s.get(i).get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxm().getSecondAttribute().getOriginNameFK())) + "();\n"
-                + "                        data[i][1] = " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Aux.get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxm().getMainAttribute().getOriginNameFK())) + "();\n"
+                : "                for (" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + " " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Aux : " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "List) {\n"
+                + "                    List<" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "> " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "s = dao" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + ".obter(" + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Aux.getPlayerIdPlayer()).get" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "List();\n"
+                + "                    for (int i = 0; i < " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "s.size(); i++) {\n"
+                + "                        data[i][0] = " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "s.get(i).get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginNameFK())) + "();\n"
+                + "                        data[i][1] = " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Aux.get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxmPkOnly().getMainAttribute().getOriginNameFK())) + "();\n"
                 + "                    }\n"
                 + "                }");
 

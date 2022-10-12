@@ -73,6 +73,7 @@ public class Generate {
                         Attribute attributeFK = tableFK.getAttributeByName(rsFK.getString("column_name"));
                         attributeFK.setOriginTableFK(rsFK.getString("referenced_table_name"));
                         attributeFK.setOriginNameFK(rsFK.getString("referenced_column_name"));
+                        tableFK.setHasFK(true);
                     } catch (Exception e) {
                         System.out.println("Algum erro");
                     }
@@ -84,7 +85,7 @@ public class Generate {
                 // DAOsGenerator geradorDeDAO = new DAOsGenerator(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAttributes(), tables.get(i).getTableNameBD());
                 // EntitiesGenerator geradorDeEntidades = new EntitiesGenerator(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAttributes());
             }
-            // MenuGenerator geradorDeMenu = new MenuGenerator(tables, jdbc.getDataBaseName());
+            MenuGenerator geradorDeMenu = new MenuGenerator(tables, jdbc.getDataBaseName());
         } catch (SQLException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 
  /**
- * @author JoaoAN2 10/10/2022 - 21:39:12
+ * @author JoaoAN2 11/10/2022 - 20:55:34
  */
 
 public class GUIMenu extends JFrame {
@@ -31,7 +31,7 @@ public class GUIMenu extends JFrame {
     public GUIMenu() {
         cp = getContentPane();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle("Menu - Chess");
+        setTitle("Menu - Boticario");
         cp.setLayout(new BorderLayout());
 
         JLabel lbTitle = new JLabel("Menu");
@@ -59,58 +59,42 @@ public class GUIMenu extends JFrame {
         cbMenu.setFont(new Font("Arial", 1, 20));
         lbComboBox.setFont(new Font("Arial", 1, 24));
 
-        cbMenuModel.addElement("Arbitration");
-        cbMenuModel.addElement("CatReferee");
-        cbMenuModel.addElement("City");
-        cbMenuModel.addElement("Federation");
-        cbMenuModel.addElement("Gender");
-        cbMenuModel.addElement("Login");
-        cbMenuModel.addElement("Player");
-        cbMenuModel.addElement("Referee");
-        cbMenuModel.addElement("State");
-        cbMenuModel.addElement("Title");
-        cbMenuModel.addElement("Tournament");
-        cbMenuModel.addElement("Tournaments");
+        cbMenuModel.addElement("Cargo");
+        cbMenuModel.addElement("Cliente");
+        cbMenuModel.addElement("Compra");
+        cbMenuModel.addElement("CompraHasProduto");
+        cbMenuModel.addElement("Funcionario");
+        cbMenuModel.addElement("Pessoa");
+        cbMenuModel.addElement("Produto");
+        cbMenuModel.addElement("TipoCliente");
         btnChoose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 switch ((String) cbMenu.getSelectedItem()) {
 
-                    case "Arbitration":
-                        ArbitrationGUI arbitration = new ArbitrationGUI();
+                    case "Cargo":
+                        CargoGUI cargo = new CargoGUI();
                         break;
-                    case "CatReferee":
-                        CatRefereeGUI catReferee = new CatRefereeGUI();
+                    case "Cliente":
+                        ClienteGUI cliente = new ClienteGUI();
                         break;
-                    case "City":
-                        CityGUI city = new CityGUI();
+                    case "Compra":
+                        CompraGUI compra = new CompraGUI();
                         break;
-                    case "Federation":
-                        FederationGUI federation = new FederationGUI();
+                    case "CompraHasProduto":
+                        CompraHasProdutoGUI compraHasProduto = new CompraHasProdutoGUI();
                         break;
-                    case "Gender":
-                        GenderGUI gender = new GenderGUI();
+                    case "Funcionario":
+                        FuncionarioGUI funcionario = new FuncionarioGUI();
                         break;
-                    case "Login":
-                        LoginGUI login = new LoginGUI();
+                    case "Pessoa":
+                        PessoaGUI pessoa = new PessoaGUI();
                         break;
-                    case "Player":
-                        PlayerGUI player = new PlayerGUI();
+                    case "Produto":
+                        ProdutoGUI produto = new ProdutoGUI();
                         break;
-                    case "Referee":
-                        RefereeGUI referee = new RefereeGUI();
-                        break;
-                    case "State":
-                        StateGUI state = new StateGUI();
-                        break;
-                    case "Title":
-                        TitleGUI title = new TitleGUI();
-                        break;
-                    case "Tournament":
-                        TournamentGUI tournament = new TournamentGUI();
-                        break;
-                    case "Tournaments":
-                        TournamentsGUI tournaments = new TournamentsGUI();
+                    case "TipoCliente":
+                        TipoClienteGUI tipoCliente = new TipoClienteGUI();
                         break;
 
                 }

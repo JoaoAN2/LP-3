@@ -21,13 +21,15 @@ public class Imports {
         if (tableEntity.isHasAttribute()) {
             cg.add("import Entidades." + className + ";\n"
                     + "import DAOs.DAO" + className + ";");
+            if(tableEntity.isHasNxm()) {
+                cg.add("import Entidades." + className + "PK;");
+            }
         }
 
-        for (int i = 0; i < atributos.size(); i++) {
-            if (atributos.get(i).getOriginTableFK() != null) {
-                cg.add("import Entidades." + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ";\n"
-                        + "import DAOs.DAO" + st.firstLetterToUpperCase(st.bdToJava(atributos.get(i).getOriginTableFK())) + ";");
-                tableEntity.setHasFK(true);
+        for (Attribute atributo : atributos) {
+            if (atributo.getOriginTableFK() != null) {
+                cg.add("import Entidades." + st.firstLetterToUpperCase(st.bdToJava(atributo.getOriginTableFK())) + ";\n"
+                        + "import DAOs.DAO" + st.firstLetterToUpperCase(st.bdToJava(atributo.getOriginTableFK())) + ";");
             }
         }
 

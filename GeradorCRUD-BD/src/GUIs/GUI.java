@@ -124,8 +124,8 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("Testando");
-                // Connect connect = new Connect(jdbc, tfHostName.getText(), tfUserName.getText(), tfPassword.getText(), "com.mysql.cj.jdbc.Driver", tfDatabaseName.getText(), "jdbc:mysql://", tfPort.getText());
-                Connect connect = new Connect(jdbc);
+                Connect connect = new Connect(jdbc, tfHostName.getText(), tfUserName.getText(), tfPassword.getText(), "com.mysql.cj.jdbc.Driver", tfDatabaseName.getText(), "jdbc:mysql://", tfPort.getText());
+                // Connect connect = new Connect(jdbc);
                 
                 Connection con = jdbc.getConnection();
                 if (con != null) {

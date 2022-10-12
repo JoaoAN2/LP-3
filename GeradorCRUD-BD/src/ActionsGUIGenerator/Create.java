@@ -13,13 +13,13 @@ public class Create {
 
     StringTools st = new StringTools();
 
-    public Create(List<String> cg, List<Attribute> atributos, int numberPK, Table tableEntity) {
+    public Create(List<String> cg, List<Attribute> atributos, Table tableEntity) {
         cg.add("       btnCreate.addActionListener(new ActionListener() {\n"
                 + "            @Override\n"
                 + "            public void actionPerformed(ActionEvent ae) {\n");
 
-        if (numberPK != atributos.size() && atributos.get(numberPK).getOriginTableFK() == null) {
-            cg.add("                tf" + st.firstLetterToUpperCase(atributos.get(numberPK).getNameJava()) + ".requestFocus();\n");
+        if (tableEntity.getNumberPk() != atributos.size() && atributos.get(tableEntity.getNumberPk()).getOriginTableFK() == null) {
+            cg.add("                tf" + st.firstLetterToUpperCase(atributos.get(tableEntity.getNumberPk()).getNameJava()) + ".requestFocus();\n");
         }
 
         if (tableEntity.isHasAttribute()) {
@@ -46,12 +46,12 @@ public class Create {
                 + "\n"
                 : "                btnSearch.setVisible(true);\n"
                 + "                btnList.setVisible(true);\n"
-                + "                " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + " = dao" + st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + ".obter(((" + st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + ") cb" + st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + ".getSelectedItem()).get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxm().getMainAttribute().getOriginNameFK())) + "());\n"
-                + "                " + tableEntity.getNxm().getSecondAttribute().getOriginTableFK() + " = dao" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + ".obter(((" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + ") cb" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + ".getSelectedItem()).get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxm().getSecondAttribute().getOriginNameFK())) + "());\n"
-                + "                List<" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "> " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + " = " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + ".get" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "List();\n"
-                + "                " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + ".add(" + tableEntity.getNxm().getSecondAttribute().getOriginTableFK() + ");\n"
-                + "                " + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + ".set" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + "List(" + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxm().getSecondAttribute().getOriginTableFK()) + ");\n"
-                + "                dao" + st.firstLetterToUpperCase(tableEntity.getNxm().getMainAttribute().getOriginTableFK()) + ".atualizar(" + tableEntity.getNxm().getMainAttribute().getOriginTableFK() + ");"
+                + "                " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + " = dao" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + ".obter(((" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + ") cb" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + ".getSelectedItem()).get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxmPkOnly().getMainAttribute().getOriginNameFK())) + "());\n"
+                + "                " + tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK() + " = dao" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + ".obter(((" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + ") cb" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + ".getSelectedItem()).get" + st.firstLetterToUpperCase(st.bdToJava(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginNameFK())) + "());\n"
+                + "                List<" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "> " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + " = " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + ".get" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "List();\n"
+                + "                " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + ".add(" + tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK() + ");\n"
+                + "                " + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + ".set" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + "List(" + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + "Has" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getSecondAttribute().getOriginTableFK()) + ");\n"
+                + "                dao" + st.firstLetterToUpperCase(tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK()) + ".atualizar(" + tableEntity.getNxmPkOnly().getMainAttribute().getOriginTableFK() + ");"
         );
 
         cg.add("            }"); // Action

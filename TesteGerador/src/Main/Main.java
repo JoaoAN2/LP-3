@@ -4,7 +4,7 @@ import GUIs.GUIMenu;
 
 /**
  *
- * @author zorawski
+ * @author tovo
  */
 public class Main {
 

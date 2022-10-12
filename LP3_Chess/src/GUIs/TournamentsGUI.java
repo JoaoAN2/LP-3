@@ -80,7 +80,6 @@ public class TournamentsGUI extends JDialog {
     private List<Tournaments> list = new ArrayList<>();
 
     public void clear() {
-        tfPositionPlayer.setText("");
         tfPointsPlayer.setText("");
     }
 
@@ -216,6 +215,7 @@ public class TournamentsGUI extends JDialog {
                 tournamentsPK.setTournamentsIdTournament(((Tournament) cbTournament.getSelectedItem()).getIdTournament());
                 tournamentsPK.setTournamentsIdPlayer(((Player) cbPlayer.getSelectedItem()).getIdPlayer());
                 tournamentsPK.setPositionPlayer(Integer.valueOf(tfPositionPlayer.getText()));
+                tournaments.setTournamentsPK(tournamentsPK);
                 tournaments.setPointsPlayer(Integer.valueOf(tfPointsPlayer.getText()));
 
                 if("create".equals(action)){

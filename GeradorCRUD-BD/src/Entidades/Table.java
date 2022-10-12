@@ -11,10 +11,13 @@ public class Table {
     private String tableNameBD;
     private String tableNameJava;
     private List<Attribute> attributes;
+    private NxmPkOnly nxmPkOnly;
+    private int numberPk = 0;
+    private int numberAttributes = 0;
     private boolean hasFK = false;
     private boolean hasDate = false;
     private boolean hasAttribute = false;
-    private NxM nxm;
+    private boolean hasNxm = false;
 
     public Table() {
     }
@@ -26,11 +29,6 @@ public class Table {
             }
         }
         return null;
-    }
-
-    @Override
-    public String toString() {
-        return tableNameBD + ";" + tableNameJava + ";" + attributes;
     }
 
     public boolean isHasAttribute() {
@@ -63,6 +61,23 @@ public class Table {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+
+        for (Attribute attribute : attributes) {
+
+            if (attribute.getTypeJava().equals("Date")) {
+                setHasDate(true);
+            }
+
+            if (attribute.getKey().equals("PRI")) {
+                setNumberPk(getNumberPk() + 1);
+            } else {
+                setNumberAttributes(getNumberAttributes() + 1);
+            }
+            
+        }
+
+        setHasNxm(this.numberPk > 1);
+        setHasAttribute(this.numberAttributes > 0);
     }
 
     public boolean isHasFK() {
@@ -81,12 +96,41 @@ public class Table {
         this.hasDate = hasDate;
     }
 
-    public NxM getNxm() {
-        return nxm;
+    public NxmPkOnly getNxmPkOnly() {
+        return nxmPkOnly;
     }
 
-    public void setNxm(NxM nxm) {
-        this.nxm = nxm;
+    public void setNxmPkOnly(NxmPkOnly nxmPkOnly) {
+        this.nxmPkOnly = nxmPkOnly;
+    }
+
+    @Override
+    public String toString() {
+        return "Table{" + "tableNameBD=" + tableNameBD + ", tableNameJava=" + tableNameJava + ", attributes=" + attributes + ", nxmPkOnly=" + nxmPkOnly + ", numberPk=" + numberPk + ", numberAttributes=" + numberAttributes + ", hasFK=" + hasFK + ", hasDate=" + hasDate + ", hasAttribute=" + hasAttribute + ", hasNxm=" + hasNxm + '}';
+    }
+
+    public int getNumberPk() {
+        return numberPk;
+    }
+
+    public void setNumberPk(int numberPk) {
+        this.numberPk = numberPk;
+    }
+
+    public boolean isHasNxm() {
+        return hasNxm;
+    }
+
+    public void setHasNxm(boolean hasNxm) {
+        this.hasNxm = hasNxm;
+    }
+
+    public int getNumberAttributes() {
+        return numberAttributes;
+    }
+
+    public void setNumberAttributes(int numberAttributes) {
+        this.numberAttributes = numberAttributes;
     }
 
 }
