@@ -1,4 +1,4 @@
-package Controllers;
+package ActionButtons;
 
 import Entidades.JDBC;
 
@@ -16,7 +16,6 @@ public class Connect {
         jdbc.setDataBaseName(databaseName);
         jdbc.setDataBasePrefix(databasePrefix);
         jdbc.setDataBasePort(databasePort);
-        
     }
 
 }

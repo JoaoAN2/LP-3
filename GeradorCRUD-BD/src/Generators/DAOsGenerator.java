@@ -1,8 +1,10 @@
-package Generator;
+package Generators;
 
 import Entidades.Attribute;
+import Entidades.Table;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,22 +14,34 @@ import java.util.List;
  */
 public class DAOsGenerator {
 
-    public DAOsGenerator(String className, List<Attribute> atributos, String classNameBD) {
+    public DAOsGenerator(String className, List<Attribute> atributos, String classNameBD, Table tableEntity) throws IOException {
         StringTools st = new StringTools();
         String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList();
 
         // Package, Imports and public class
-        cg.add("package DAOs;\n\n"
-                + "import Entidades." + className + ";\n"
+        cg.add("package DAOs;\n");
+
+        if (tableEntity.isHasNxm() && tableEntity.isHasAttribute()) {
+            cg.add("import Entidades." + className + "PK;");
+        }
+
+        cg.add("import Entidades." + className + ";\n"
                 + "import java.util.ArrayList;\n"
-                + "import java.util.List;\n\n"
-                + "public class DAO" + className + " extends DAOGenerico<" + className + "> {\n");
+                + "import java.util.List;\n");
+
+        cg.add("public class DAO" + className + " extends DAOGenerico<" + className + "> {\n");
 
         // Construtor
         cg.add("    public DAO" + className + "() {\n"
                 + "        super(" + className + ".class);\n"
                 + "    }\n");
+
+        if (tableEntity.isHasNxm() && tableEntity.isHasAttribute()) {
+            cg.add("    public " + className + " obter(" + className + "PK " + classNameMin + "PK){\n"
+                    + "        return em.find(" + className + ".class, " + classNameMin + "PK);\n"
+                    + "    }\n");
+        }
 
         // AutoID
         if (atributos.get(0).getTypeJava().equals("int")) {
@@ -79,9 +93,15 @@ public class DAOsGenerator {
         cg.add(orderString);
 
         cg.add("\n        List<String> ls = new ArrayList<>();\n"
-                + "        for (int i = 0; i < lf.size(); i++) {\n"
-                + "            ls.add(lf.get(i).get" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + "() + \"-\" + lf.get(i).get" + st.firstLetterToUpperCase(atributos.get(1).getNameJava()) + "());\n"
-                + "        }\n"
+                + "        for (int i = 0; i < lf.size(); i++) {");
+        
+        if (tableEntity.isHasNxm() && tableEntity.isHasAttribute()) {
+            cg.add("            ls.add(lf.get(i).get" + className + "PK().toString());");
+        } else {
+            cg.add("            ls.add(lf.get(i).get" + st.firstLetterToUpperCase(atributos.get(0).getNameJava()) + "() + \"-\" + lf.get(i).get" + st.firstLetterToUpperCase(atributos.get(1).getNameJava()) + "());");
+        }
+
+        cg.add("        }\n"
                 + "        return ls;\n"
                 + "    }\n");
 
@@ -100,6 +120,7 @@ public class DAOsGenerator {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
+        manipulaArquivo.criarArquivoEDiretorio("/home/joaoan2/projects/LP-3/TesteGerador/src/DAOs/DAO" + className + ".java");
         manipulaArquivo.salvarArquivo("/home/joaoan2/projects/LP-3/TesteGerador/src/DAOs/DAO" + className + ".java", cg);
 
     }

@@ -1,7 +1,7 @@
 package GUIs;
 
-import Controllers.Connect;
-import Controllers.Generate;
+import ActionButtons.Connect;
+import ActionButtons.Generate;
 import Entidades.JDBC;
 import Tools.StringTools;
 import java.awt.BorderLayout;
@@ -9,6 +9,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -154,7 +157,11 @@ public class GUI extends JFrame {
         btnGenerate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Generate generate = new Generate(jdbc);
+                try {
+                    Generate generate = new Generate(jdbc);
+                } catch (IOException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 

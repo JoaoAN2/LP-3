@@ -1,4 +1,4 @@
-package Generator;
+package Generators;
 
 import ActionsGUIGenerator.Cancell;
 import ActionsGUIGenerator.Create;
@@ -85,7 +85,7 @@ public class GUIsGenerator {
             cg.add("    JLabel lb" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JLabel(\"" + st.firstLetterToUpperCase(atributos.get(i).getLabelName()) + "\");");
 
             if (atributos.get(i).getOriginTableFK() == null) {
-                cg.add("    JTextField tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JTextField(" + atributos.get(i).getSize() + ");\n");
+                cg.add("    JTextField tf" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + " = new JTextField(" + (atributos.get(i).getSize() > 50 ? 50 :atributos.get(i).getSize()) + ");\n");
             }
         }
 

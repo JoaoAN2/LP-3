@@ -1,14 +1,18 @@
-package Controllers;
+package ActionButtons;
 
 import Entidades.Attribute;
+import Entidades.Config;
 import Entidades.JDBC;
 import Entidades.Table;
 import GUIs.GUI;
-import Generator.DAOsGenerator;
-import Generator.EntitiesGenerator;
-import Generator.GUIsGenerator;
-import Generator.MenuGenerator;
+import Generators.DAOsGenerator;
+import Generators.EntitiesGenerator;
+import Generators.GUIsGenerator;
+import Generators.MenuGenerator;
+import Generators.UPGenerator;
+import Tools.ManipulaArquivo;
 import Tools.StringTools;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class Generate {
 
-    public Generate(JDBC jdbc) {
+    public Generate(JDBC jdbc) throws IOException {
         StringTools st = new StringTools();
         Connection con = jdbc.getConnection();
         try {
@@ -80,12 +84,27 @@ public class Generate {
                 }
             }
 
-            for (int i = 0; i < tables.size(); i++) {
-                GUIsGenerator geradorDeGUI = new GUIsGenerator(tables.get(i));
-                // DAOsGenerator geradorDeDAO = new DAOsGenerator(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAttributes(), tables.get(i).getTableNameBD());
-                // EntitiesGenerator geradorDeEntidades = new EntitiesGenerator(st.firstLetterToUpperCase(tables.get(i).getTableNameJava()), tables.get(i).getAttributes());
+            Config config = new Config();
+            config.setPath("/home/joaoan2/projects/LP-3/TesteGerador/src/");
+            CreateDirectories createDirectories = new CreateDirectories(config); 
+
+            for (Table table : tables) {
+                GUIsGenerator geradorDeGUI = new GUIsGenerator(table);
+
+                if (table.isHasAttribute()) {
+                    DAOsGenerator geradorDeDAO = new DAOsGenerator(st.firstLetterToUpperCase(table.getTableNameJava()), table.getAttributes(), table.getTableNameBD(), table);
+                    EntitiesGenerator geradorDeEntidades = new EntitiesGenerator(st.firstLetterToUpperCase(table.getTableNameJava()), table.getAttributes(), table, false);
+                    if (table.isHasNxm()) {
+                        EntitiesGenerator geradorDeEntidadesPK = new EntitiesGenerator(st.firstLetterToUpperCase(table.getTableNameJava()) + "PK", table.getAttributes(), table, true);
+                    }
+                }
             }
+
             MenuGenerator geradorDeMenu = new MenuGenerator(tables, jdbc.getDataBaseName());
+            ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
+            
+            manipulaArquivo.copiarArquivo("src/DAOs/DAOGenerico.java", config.getPath() + "DAOs/DAOGenerico.java");
+            UPGenerator upGenerator = new UPGenerator(jdbc, config);
         } catch (SQLException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }

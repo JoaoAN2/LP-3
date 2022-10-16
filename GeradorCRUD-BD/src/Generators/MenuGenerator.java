@@ -1,4 +1,4 @@
-package Generator;
+package Generators;
 
 import Entidades.Table;
 import Tools.ManipulaArquivo;

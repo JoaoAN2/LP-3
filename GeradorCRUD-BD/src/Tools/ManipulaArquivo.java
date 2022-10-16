@@ -4,8 +4,13 @@ package Tools;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +20,7 @@ IMPORTANTE
 Caso não seja informado um caminho completo
 o arquivo será salvo na pasta atual
 No caso, dentro do próprio projeto.
-*/
-
+ */
 public class ManipulaArquivo {
 
     public ManipulaArquivo() {
@@ -84,5 +88,65 @@ public class ManipulaArquivo {
             return 1; //houve erro
         }
         return 0;
+    }
+
+    public void criarArquivoEDiretorio(String path) throws IOException {
+        File dir = new File(path.substring(0, path.lastIndexOf("/") + 1));
+        File file = new File(path.substring(path.lastIndexOf("/") + 1));
+        criarDiretorio(dir);
+        criarArquivo(file);
+    }
+
+    public void criarDiretorio(File dir) {
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+    }
+
+    public void criarArquivo(File file) throws IOException {
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+    }
+
+    public static void copyFile(File src, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(src);
+                OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = is.read(buffer)) != -1) {
+                os.write(buffer, 0, len);
+            }
+        }
+    }
+
+    public void copiarArquivo(String originPathAndFile, String destinyPathAndFile) throws IOException {
+        File originFile = new File(originPathAndFile);
+        criarArquivoEDiretorio(destinyPathAndFile);
+        File destinyFile = new File(destinyPathAndFile);
+
+        try (InputStream is = new FileInputStream(originFile);
+                OutputStream os = new FileOutputStream(destinyFile)) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = is.read(buffer)) != -1) {
+                os.write(buffer, 0, len);
+            }
+        }
+    }
+
+    public void copiarDiretorio(File originDir, File destinyDIr) throws IOException {
+        if (originDir.isDirectory()) {
+            if (!destinyDIr.exists()) {
+                destinyDIr.mkdir();
+            }
+            String[] children = originDir.list();
+            for (int i = 0; i < children.length; i++) {
+                copiarDiretorio(new File(originDir, children[i]),
+                        new File(destinyDIr, children[i]));
+            }
+        } else {
+            copyFile(originDir, destinyDIr);
+        }
     }
 }

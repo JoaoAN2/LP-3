@@ -91,5 +91,5 @@ public class TournamentsPK implements Serializable {
     public String toString() {
         return tournamentsIdTournament + ";" + tournamentsIdPlayer + ";" + positionPlayer;
     }
-    
+
 }

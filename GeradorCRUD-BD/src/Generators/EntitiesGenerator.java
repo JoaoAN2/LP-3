@@ -1,6 +1,7 @@
-package Generator;
+package Generators;
 
 import Entidades.Attribute;
+import Entidades.Table;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
 import java.util.ArrayList;
@@ -12,57 +13,37 @@ import java.util.List;
  */
 public class EntitiesGenerator {
 
-    public EntitiesGenerator(String className, List<Attribute> attributes) {
+    public EntitiesGenerator(String className, List<Attribute> attributes, Table tableEntity, boolean entityPK) {
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
         List<String> cg = new ArrayList(); // Código Gerado
         StringTools st = new StringTools();
         String path = "/home/joaoan2/projects/LP-3/TesteGerador/src/Entidades/" + className + ".java";
+        ToStringGenerator tsg = new ToStringGenerator();
         if (manipulaArquivo.existeOArquivo(path)) {
-
-            boolean hasDate = false;
-            for (int i = 0; i < attributes.size(); i++) {
-                if (attributes.get(i).getTypeJava().equals("Date")) {
-                    hasDate = true;
-                    break;
-                }
-            }
 
             List<String> entitieFile = manipulaArquivo.abrirArquivo(path);
             for (int i = 0; i < entitieFile.size(); i++) {
 
-                if (i > 0 && entitieFile.get(i - 1).trim().length() >= 7 && entitieFile.get(i - 1).trim().substring(0, 7).equals("package") && hasDate) {
+                if (i > 0 && entitieFile.get(i - 1).trim().length() >= 7 && entitieFile.get(i - 1).trim().substring(0, 7).equals("package") && tableEntity.isHasDate()) {
                     cg.add("\nimport Tools.DateTools;");
                 }
 
                 if (i > 1 && entitieFile.get(i - 1).trim().length() >= 26 && entitieFile.get(i - 1).trim().substring(0, 26).equals("public String toString() {")) {
 
-                    String toString = "        return ";
-
-                    if (hasDate) {
+                    if (tableEntity.isHasDate()) {
                         cg.add("        DateTools dt = new DateTools();");
                     }
-
-                    for (int j = 0; j < attributes.size(); j++) {
-
-                        if (attributes.get(j).getTypeJava().equals("Date")) {
-                            toString += "dt.conversionDateToString(";
-                        }
-
-                        if (attributes.get(j).getOriginTableFK() == null) {
-                            toString += attributes.get(j).getNameJava();
-                        } else {
-                            toString += attributes.get(j).getNameJava() + ".get" + st.firstLetterToUpperCase(st.bdToJava(attributes.get(j).getOriginNameFK())) + "()";
-                        }
-
-                        if (attributes.get(j).getTypeJava().equals("Date")) {
-                            toString += ")";
-                        }
-
-                        toString += " + \";\" + ";
+                       
+                    String toString;
+                    
+                    if (entityPK) {
+                        toString = tsg.generateToStringPK(attributes);
+                    } else {
+                        toString = tableEntity.isHasNxm()
+                                ? tsg.generateToStringNxm(className, attributes)
+                                : tsg.generateToString(attributes);
                     }
-
-                    toString = toString.substring(0, toString.length() - 9) + ";";
 
                     cg.add(toString);
                     cg.add("    }    \n"
