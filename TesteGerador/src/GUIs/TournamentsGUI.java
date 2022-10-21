@@ -31,7 +31,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
  /**
- * @author JoaoAN2 16/10/2022 - 10:50:59
+ * @author JoaoAN2 21/10/2022 - 10:49:28
  */
 
 public class TournamentsGUI extends JDialog {

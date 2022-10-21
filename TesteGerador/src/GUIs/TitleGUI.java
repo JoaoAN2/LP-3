@@ -24,7 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
  /**
- * @author JoaoAN2 16/10/2022 - 10:50:58
+ * @author JoaoAN2 21/10/2022 - 10:49:27
  */
 
 public class TitleGUI extends JDialog {

@@ -10,6 +10,8 @@ public class Config {
     private Color color;
     private String path;
     private String  Author;
+    private int width;
+    private int height;
 
     public Config(Color color, String path, String Author) {
         this.color = color;

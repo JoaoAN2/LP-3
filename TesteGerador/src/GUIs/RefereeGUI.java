@@ -30,7 +30,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
  /**
- * @author JoaoAN2 16/10/2022 - 10:50:57
+ * @author JoaoAN2 21/10/2022 - 10:49:26
  */
 
 public class RefereeGUI extends JDialog {

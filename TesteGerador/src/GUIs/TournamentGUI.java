@@ -29,7 +29,7 @@ import javax.swing.JComboBox;
 import Tools.DateTools;
 
  /**
- * @author JoaoAN2 16/10/2022 - 10:50:58
+ * @author JoaoAN2 21/10/2022 - 10:49:27
  */
 
 public class TournamentGUI extends JDialog {
