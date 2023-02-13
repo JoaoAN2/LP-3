@@ -126,7 +126,6 @@ public class DAOsGenerator {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.criarArquivoEDiretorio(config.getPath() + "/src/DAOs/DAO" + className + ".java");
         manipulaArquivo.salvarArquivo(config.getPath() + "/src/DAOs/DAO" + className + ".java", cg);
 
     }

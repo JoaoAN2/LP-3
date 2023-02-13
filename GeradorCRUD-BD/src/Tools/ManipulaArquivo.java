@@ -92,7 +92,7 @@ public class ManipulaArquivo {
 
     public void criarArquivoEDiretorio(String path) throws IOException {
         File dir = new File(path.substring(0, path.lastIndexOf("/") + 1));
-        File file = new File(path.substring(path.lastIndexOf("/") + 1));
+        File file = new File(path);
         criarDiretorio(dir);
         criarArquivo(file);
     }

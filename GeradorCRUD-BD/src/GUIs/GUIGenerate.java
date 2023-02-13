@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  *
@@ -43,13 +42,8 @@ public class GUIGenerate extends JFrame {
     JTextField tfAuthor = new JTextField(30);
 
     JFileChooser fcDirectory = new JFileChooser();
-    JColorChooser colorChooser = new JColorChooser();
-
+    
     Config config = new Config();
-
-    JPanel pnLbAuthor = new JPanel();
-
-    JPanel pnTfAuthor = new JPanel();
 
     public GUIGenerate(GUI gui, JDBC jdbc) {
         cp = getContentPane();
