@@ -43,10 +43,10 @@ public class UPGenerator {
             System.out.println(line);
         }
 
-        manipulaArquivo.criarArquivoEDiretorio(config.getPath() + "META-INF/persistence.xml");
-        manipulaArquivo.salvarArquivo(config.getPath() + "META-INF/persistence.xml", cg);
+        manipulaArquivo.criarArquivoEDiretorio(config.getPath() + "/src/META-INF/persistence.xml");
+        manipulaArquivo.salvarArquivo(config.getPath() + "/src/META-INF/persistence.xml", cg);
 
-        System.out.println(config.getPath() + "META-INF/persistence.xml");
+        System.out.println(config.getPath() + "/src/META-INF/persistence.xml");
     }
 
 }

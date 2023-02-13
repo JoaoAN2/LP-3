@@ -33,11 +33,11 @@ import javax.swing.JComboBox;
 import Tools.DateTools;
 
  /**
- * @author JoaoAN2 21/10/2022 - 10:49:25
+ * @author Usuário Teste 13/02/2023 - 19:10:26
  */
 
 public class PlayerGUI extends JDialog {
-    String action;
+    String action;    Color mainColor = new Color(51, 51, 255);
 
     Player player = new Player();
     DAOPlayer daoPlayer = new DAOPlayer();
@@ -139,7 +139,7 @@ public class PlayerGUI extends JDialog {
         cp.add(pnSouth, BorderLayout.SOUTH);
         cp.add(pnCenter, BorderLayout.CENTER);
 
-        pnNorth.setBackground(Color.cyan);
+        pnNorth.setBackground(mainColor);
         pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));
 
 

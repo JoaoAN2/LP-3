@@ -29,11 +29,11 @@ import javax.swing.JComboBox;
 import Tools.DateTools;
 
  /**
- * @author JoaoAN2 21/10/2022 - 10:49:27
+ * @author Usuário Teste 13/02/2023 - 19:10:27
  */
 
 public class TournamentGUI extends JDialog {
-    String action;
+    String action;    Color mainColor = new Color(51, 51, 255);
 
     Tournament tournament = new Tournament();
     DAOTournament daoTournament = new DAOTournament();
@@ -115,7 +115,7 @@ public class TournamentGUI extends JDialog {
         cp.add(pnSouth, BorderLayout.SOUTH);
         cp.add(pnCenter, BorderLayout.CENTER);
 
-        pnNorth.setBackground(Color.cyan);
+        pnNorth.setBackground(mainColor);
         pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));
 
 

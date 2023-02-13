@@ -8,6 +8,7 @@ import ActionsGUIGenerator.Read;
 import ActionsGUIGenerator.Save;
 import ActionsGUIGenerator.Update;
 import Entidades.Attribute;
+import Entidades.Config;
 import Entidades.Table;
 import Entidades.NxmPkOnly;
 import Tools.ManipulaArquivo;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class GUIsGenerator {
 
-    public GUIsGenerator(Table tableEntity) {
+    public GUIsGenerator(Table tableEntity, Config config) {
         StringTools st = new StringTools();
         List<Attribute> atributos = tableEntity.getAttributes();
         String className = st.firstLetterToUpperCase(tableEntity.getTableNameJava());
@@ -41,9 +42,10 @@ public class GUIsGenerator {
         cg.add("package GUIs;\n");
 
         Imports imports = new Imports(cg, tableEntity);
-        cg.add("\n /**\n * @author JoaoAN2 " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date()) + "\n */\n");
+        cg.add("\n /**\n * @author " + config.getAuthor() + " " + new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss").format(new Date()) + "\n */\n");
         cg.add("public class " + className + "GUI extends JDialog {\n"
-                + "    String action;\n");
+                + "    String action;"
+                + "    Color mainColor = new Color("+ config.getColor().getRed() + ", " + config.getColor().getGreen() + ", " + config.getColor().getBlue() + ");\n");
 
         if (tableEntity.isHasAttribute()) {
             cg.add("    " + className + " " + classNameMin + " = new " + className + "();\n"
@@ -139,7 +141,7 @@ public class GUIsGenerator {
                 + "        cp.add(pnSouth, BorderLayout.SOUTH);\n"
                 + "        cp.add(pnCenter, BorderLayout.CENTER);\n"
                 + "\n"
-                + "        pnNorth.setBackground(Color.cyan);\n"
+                + "        pnNorth.setBackground(mainColor);\n"
                 + "        pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));\n"
                 + "\n");
 
@@ -224,7 +226,7 @@ public class GUIsGenerator {
             System.out.println(linha);
         } 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.salvarArquivo("/home/joaoan2/projects/LP-3/TesteGerador/src/GUIs/" + className + "GUI.java", cg);
+        manipulaArquivo.salvarArquivo(config.getPath() + "/src/GUIs/" + className + "GUI.java", cg);
     }
 
 }

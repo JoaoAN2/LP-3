@@ -54,7 +54,7 @@ public class GUI extends JFrame {
 
     JButton btnConnectionTest = new JButton("Testar conexão");
     JButton btnCancel = new JButton("Cancelar");
-    JButton btnGenerate = new JButton("Gerar Sistema");
+    JButton btnNext = new JButton("Próximo");
 
     StringTools st = new StringTools();
 
@@ -116,26 +116,26 @@ public class GUI extends JFrame {
         pnSouth.add(lbStatus);
         pnSouth.add(btnConnectionTest);
         pnSouth.add(btnCancel);
-        pnSouth.add(btnGenerate);
+        pnSouth.add(btnNext);
 
-        btnGenerate.setVisible(false);
         btnCancel.setVisible(false);
+        btnNext.setVisible(false);
 
         JDBC jdbc = new JDBC();
+        
         // Testando conexão
         btnConnectionTest.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 System.out.println("Testando");
                 Connect connect = new Connect(jdbc, tfHostName.getText(), tfUserName.getText(), tfPassword.getText(), "com.mysql.cj.jdbc.Driver", tfDatabaseName.getText(), "jdbc:mysql://", tfPort.getText());
-                // Connect connect = new Connect(jdbc);
                 
                 Connection con = jdbc.getConnection();
                 if (con != null) {
                     lbStatus.setText("BD \"" + jdbc.getDataBaseName() + "\" conectado com sucesso!");
                     btnConnectionTest.setVisible(false);
                     btnCancel.setVisible(true);
-                    btnGenerate.setVisible(true);
+                    btnNext.setVisible(true);
                     disabled();
                 } else {
                     lbStatus.setText("Dados inseridos de maneira inválida!");
@@ -148,25 +148,26 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 btnConnectionTest.setVisible(true);
                 btnCancel.setVisible(false);
-                btnGenerate.setVisible(false);
+                btnNext.setVisible(false);
                 jdbc.closeConnection();
                 enable();
             }
         });
-
-        btnGenerate.addActionListener(new ActionListener() {
+        
+        GUIGenerate guiGenerate = new GUIGenerate(this, jdbc);
+        guiGenerate.setVisible(false);
+        
+        btnNext.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Generate generate = new Generate(jdbc);
-                } catch (IOException ex) {
-                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                guiGenerate.setVisible(true);
+                setVisible(false);
             }
         });
-
+        
+        
         setTitle("Gerador de CRUD - BD");
-        setSize(500, 200);
+        setSize(800, 200);
         setLocationRelativeTo(null);
         setVisible(true);
     }

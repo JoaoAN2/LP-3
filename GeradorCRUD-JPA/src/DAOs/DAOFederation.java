@@ -1,7 +1,6 @@
 package DAOs;
 
 import Entidades.Federation;
-import GUIs.FederationGUI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,6 @@ public class DAOFederation extends DAOGenerico<Federation> {
     public static void main(String[] args) {
         DAOFederation daoFederation = new DAOFederation();
         List<Federation> listaFederation = daoFederation.list();
-        FederationGUI federationGUI = new FederationGUI();
         for (Federation federation : listaFederation) {
             System.out.println(federation);
         }

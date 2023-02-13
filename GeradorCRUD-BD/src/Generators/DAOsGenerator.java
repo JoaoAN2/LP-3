@@ -1,6 +1,7 @@
 package Generators;
 
 import Entidades.Attribute;
+import Entidades.Config;
 import Entidades.Table;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
@@ -14,11 +15,16 @@ import java.util.List;
  */
 public class DAOsGenerator {
 
-    public DAOsGenerator(String className, List<Attribute> atributos, String classNameBD, Table tableEntity) throws IOException {
+    public DAOsGenerator(Table tableEntity, Config config) throws IOException {
+        
         StringTools st = new StringTools();
-        String classNameMin = st.firstLetterToLowerCase(className);
         List<String> cg = new ArrayList();
 
+        String className = st.firstLetterToUpperCase(tableEntity.getTableNameJava());
+        String classNameMin = st.firstLetterToLowerCase(className);
+        List<Attribute> atributos = tableEntity.getAttributes();
+        String classNameBD = tableEntity.getTableNameBD();
+        
         // Package, Imports and public class
         cg.add("package DAOs;\n");
 
@@ -120,8 +126,8 @@ public class DAOsGenerator {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.criarArquivoEDiretorio("/home/joaoan2/projects/LP-3/TesteGerador/src/DAOs/DAO" + className + ".java");
-        manipulaArquivo.salvarArquivo("/home/joaoan2/projects/LP-3/TesteGerador/src/DAOs/DAO" + className + ".java", cg);
+        manipulaArquivo.criarArquivoEDiretorio(config.getPath() + "/src/DAOs/DAO" + className + ".java");
+        manipulaArquivo.salvarArquivo(config.getPath() + "/src/DAOs/DAO" + className + ".java", cg);
 
     }
 

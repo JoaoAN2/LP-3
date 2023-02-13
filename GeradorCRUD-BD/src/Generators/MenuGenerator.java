@@ -1,5 +1,6 @@
 package Generators;
 
+import Entidades.Config;
 import Entidades.Table;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class MenuGenerator {
 
-    public MenuGenerator(List<Table> tables, String bdName) {
+    public MenuGenerator(List<Table> tables, String bdName, Config config) {
         List<String> cg = new ArrayList();
         StringTools st = new StringTools();
         cg.add("package GUIs;\n");
@@ -108,6 +109,6 @@ public class MenuGenerator {
         }
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-        manipulaArquivo.salvarArquivo("/home/joaoan2/projects/LP-3/TesteGerador/src/GUIs/GUIMenu.java", cg);
+        manipulaArquivo.salvarArquivo(config.getPath() + "/src/GUIs/GUIMenu.java", cg);
     }
 }

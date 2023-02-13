@@ -1,6 +1,7 @@
 package Generators;
 
 import Entidades.Attribute;
+import Entidades.Config;
 import Entidades.Table;
 import Tools.ManipulaArquivo;
 import Tools.StringTools;
@@ -13,12 +14,12 @@ import java.util.List;
  */
 public class EntitiesGenerator {
 
-    public EntitiesGenerator(String className, List<Attribute> attributes, Table tableEntity, boolean entityPK) {
+    public EntitiesGenerator(String className, List<Attribute> attributes, Table tableEntity, boolean entityPK, Config config) {
 
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
         List<String> cg = new ArrayList(); // Código Gerado
         StringTools st = new StringTools();
-        String path = "/home/joaoan2/projects/LP-3/TesteGerador/src/Entidades/" + className + ".java";
+        String path = config.getPath() + "/src/Entidades/" + className + ".java";
         ToStringGenerator tsg = new ToStringGenerator();
         if (manipulaArquivo.existeOArquivo(path)) {
 

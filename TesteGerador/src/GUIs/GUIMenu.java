@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 
  /**
- * @author JoaoAN2 21/10/2022 - 10:49:29
+ * @author JoaoAN2 13/02/2023 - 19:10:28
  */
 
 public class GUIMenu extends JFrame {

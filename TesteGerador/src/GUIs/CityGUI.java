@@ -28,11 +28,11 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
  /**
- * @author JoaoAN2 21/10/2022 - 10:49:24
+ * @author Usuário Teste 13/02/2023 - 19:10:26
  */
 
 public class CityGUI extends JDialog {
-    String action;
+    String action;    Color mainColor = new Color(51, 51, 255);
 
     City city = new City();
     DAOCity daoCity = new DAOCity();
@@ -100,7 +100,7 @@ public class CityGUI extends JDialog {
         cp.add(pnSouth, BorderLayout.SOUTH);
         cp.add(pnCenter, BorderLayout.CENTER);
 
-        pnNorth.setBackground(Color.cyan);
+        pnNorth.setBackground(mainColor);
         pnCenter.setBorder(BorderFactory.createLineBorder(Color.black));
 
 

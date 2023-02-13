@@ -9,14 +9,12 @@ import java.awt.Color;
 public class Config {
     private Color color;
     private String path;
-    private String  Author;
-    private int width;
-    private int height;
-
-    public Config(Color color, String path, String Author) {
+    private String  author;
+    
+    public Config(Color color, String path, String author) {
         this.color = color;
         this.path = path;
-        this.Author = Author;
+        this.author = author;
     }
 
     public Config() {
@@ -39,16 +37,16 @@ public class Config {
     }
 
     public String getAuthor() {
-        return Author;
+        return author;
     }
 
-    public void setAuthor(String Author) {
-        this.Author = Author;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     @Override
     public String toString() {
-        return color + ";" + path + ";" + Author;
+        return color + ";" + path + ";" + author;
     }
     
 }

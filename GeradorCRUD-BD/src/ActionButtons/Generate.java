@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class Generate {
 
-    public Generate(JDBC jdbc) throws IOException {
+    public Generate(JDBC jdbc, Config config) throws IOException {
         StringTools st = new StringTools();
         Connection con = jdbc.getConnection();
         try {
@@ -84,26 +84,24 @@ public class Generate {
                 }
             }
 
-            Config config = new Config();
-            config.setPath("/home/joaoan2/projects/LP-3/TesteGerador/src/");
-            CreateDirectories createDirectories = new CreateDirectories(config); 
+            CreateDirectories createDirectories = new CreateDirectories(config);
 
             for (Table table : tables) {
-                GUIsGenerator geradorDeGUI = new GUIsGenerator(table);
+                GUIsGenerator geradorDeGUI = new GUIsGenerator(table, config);
 
                 if (table.isHasAttribute()) {
-                    DAOsGenerator geradorDeDAO = new DAOsGenerator(st.firstLetterToUpperCase(table.getTableNameJava()), table.getAttributes(), table.getTableNameBD(), table);
-                    EntitiesGenerator geradorDeEntidades = new EntitiesGenerator(st.firstLetterToUpperCase(table.getTableNameJava()), table.getAttributes(), table, false);
+                    DAOsGenerator geradorDeDAO = new DAOsGenerator(table, config);
+                    EntitiesGenerator geradorDeEntidades = new EntitiesGenerator(st.firstLetterToUpperCase(table.getTableNameJava()), table.getAttributes(), table, false, config);
                     if (table.isHasNxm()) {
-                        EntitiesGenerator geradorDeEntidadesPK = new EntitiesGenerator(st.firstLetterToUpperCase(table.getTableNameJava()) + "PK", table.getAttributes(), table, true);
+                        EntitiesGenerator geradorDeEntidadesPK = new EntitiesGenerator(st.firstLetterToUpperCase(table.getTableNameJava()) + "PK", table.getAttributes(), table, true, config);
                     }
                 }
             }
 
-            MenuGenerator geradorDeMenu = new MenuGenerator(tables, jdbc.getDataBaseName());
+            MenuGenerator geradorDeMenu = new MenuGenerator(tables, jdbc.getDataBaseName(), config);
             ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
-            
-            manipulaArquivo.copiarArquivo("src/DAOs/DAOGenerico.java", config.getPath() + "DAOs/DAOGenerico.java");
+
+            manipulaArquivo.copiarArquivo("src/DAOs/DAOGenerico.java", config.getPath() + "/src/DAOs/DAOGenerico.java");
             UPGenerator upGenerator = new UPGenerator(jdbc, config);
         } catch (SQLException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
