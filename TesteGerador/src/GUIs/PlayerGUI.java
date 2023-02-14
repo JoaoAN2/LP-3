@@ -33,11 +33,11 @@ import javax.swing.JComboBox;
 import Tools.DateTools;
 
  /**
- * @author Usuário Teste 13/02/2023 - 19:10:26
+ * @author Usuário Teste 13/02/2023 - 20:04:49
  */
 
 public class PlayerGUI extends JDialog {
-    String action;    Color mainColor = new Color(51, 51, 255);
+    String action;    Color mainColor = new Color(102, 102, 0);
 
     Player player = new Player();
     DAOPlayer daoPlayer = new DAOPlayer();
