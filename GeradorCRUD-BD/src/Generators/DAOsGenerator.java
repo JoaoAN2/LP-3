@@ -16,15 +16,14 @@ import java.util.List;
 public class DAOsGenerator {
 
     public DAOsGenerator(Table tableEntity, Config config) throws IOException {
-        
+
         StringTools st = new StringTools();
         List<String> cg = new ArrayList();
 
         String className = st.firstLetterToUpperCase(tableEntity.getTableNameJava());
         String classNameMin = st.firstLetterToLowerCase(className);
         List<Attribute> atributos = tableEntity.getAttributes();
-        String classNameBD = tableEntity.getTableNameBD();
-        
+
         // Package, Imports and public class
         cg.add("package DAOs;\n");
 
@@ -52,7 +51,7 @@ public class DAOsGenerator {
         // AutoID
         if (atributos.get(0).getTypeJava().equals("int")) {
             cg.add("    public int autoId" + className + "() {\n"
-                    + "        Integer a = (Integer) em.createQuery(\"SELECT MAX(e." + atributos.get(0).getNameJava() + ") FROM " + classNameBD + "e \").getSingleResult();\n"
+                    + "        Integer a = (Integer) em.createQuery(\"SELECT MAX(e." + atributos.get(0).getNameJava() + ") FROM " + className + "e \").getSingleResult();\n"
                     + "        if(a != null) {\n"
                     + "            return a + 1;\n"
                     + "        } else {\n"
@@ -62,17 +61,18 @@ public class DAOsGenerator {
         }
 
         // Lists and ListsInOrder
-        for (int i = 0; i < atributos.size(); i++) {
+        for (Attribute atributo : atributos) {
 
-            if (atributos.get(i).getTypeJava().equals("String")) {
-                cg.add("    public List<" + className + "> listBy" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "(" + atributos.get(i).getTypeJava() + " " + st.firstLetterToLowerCase(atributos.get(i).getNameJava()) + ") {\n"
-                        + "        return em.createQuery(\"SELECT e FROM " + classNameBD + " e WHERE e." + atributos.get(i).getNameBD() + " LIKE :" + atributos.get(i).getNameJava() + "\").setParameter(\"" + atributos.get(i).getNameJava() + "\", \"%\" + " + atributos.get(i).getNameJava() + " + \"%\").getResultList();\n"
+            if (atributo.getTypeJava().equals("String")) {
+                cg.add("    public List<" + className + "> listBy" + st.firstLetterToUpperCase(atributo.getNameJava()) + "(" + atributo.getTypeJava() + " " + st.firstLetterToLowerCase(atributo.getNameJava()) + ") {\n"
+                        + "        return em.createQuery(\"SELECT e FROM " + className + " e WHERE e." + atributo.getNameJava() + " LIKE :" + atributo.getNameJava() + "\").setParameter(\"" + atributo.getNameJava() + "\", \"%\" + " + atributo.getNameJava() + " + \"%\").getResultList();\n"
                         + "    }\n");
             }
 
-            cg.add("    public List<" + className + "> listInOrder" + st.firstLetterToUpperCase(atributos.get(i).getNameJava()) + "() {\n"
-                    + "        return em.createQuery(\"SELECT e FROM " + classNameBD + " e ORDER BY e." + atributos.get(i).getNameBD() + "\").getResultList();\n"
+            cg.add("    public List<" + className + "> listInOrder" + st.firstLetterToUpperCase(atributo.getNameJava()) + "() {\n"
+                    + "        return em.createQuery(\"SELECT e FROM " + className + " e ORDER BY e." + atributo.getNameJava() + "\").getResultList();\n"
                     + "    }\n");
+
         }
 
         // listInOrderString
@@ -100,7 +100,7 @@ public class DAOsGenerator {
 
         cg.add("\n        List<String> ls = new ArrayList<>();\n"
                 + "        for (int i = 0; i < lf.size(); i++) {");
-        
+
         if (tableEntity.isHasNxm() && tableEntity.isHasAttribute()) {
             cg.add("            ls.add(lf.get(i).get" + className + "PK().toString());");
         } else {

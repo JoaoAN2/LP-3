@@ -11,23 +11,23 @@ public class DAOLogin extends DAOGenerico<Login> {
     }
 
     public List<Login> listByEmail(String email) {
-        return em.createQuery("SELECT e FROM login e WHERE e.email LIKE :email").setParameter("email", "%" + email + "%").getResultList();
+        return em.createQuery("SELECT e FROM Login e WHERE e.email LIKE :email").setParameter("email", "%" + email + "%").getResultList();
     }
 
     public List<Login> listInOrderEmail() {
-        return em.createQuery("SELECT e FROM login e ORDER BY e.email").getResultList();
+        return em.createQuery("SELECT e FROM Login e ORDER BY e.email").getResultList();
     }
 
     public List<Login> listByPassword(String password) {
-        return em.createQuery("SELECT e FROM login e WHERE e.password LIKE :password").setParameter("password", "%" + password + "%").getResultList();
+        return em.createQuery("SELECT e FROM Login e WHERE e.password LIKE :password").setParameter("password", "%" + password + "%").getResultList();
     }
 
     public List<Login> listInOrderPassword() {
-        return em.createQuery("SELECT e FROM login e ORDER BY e.password").getResultList();
+        return em.createQuery("SELECT e FROM Login e ORDER BY e.password").getResultList();
     }
 
     public List<Login> listInOrderAutority() {
-        return em.createQuery("SELECT e FROM login e ORDER BY e.autority").getResultList();
+        return em.createQuery("SELECT e FROM Login e ORDER BY e.autority").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

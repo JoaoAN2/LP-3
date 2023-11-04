@@ -11,19 +11,19 @@ public class DAOGender extends DAOGenerico<Gender> {
     }
 
     public List<Gender> listBySiglaGender(String siglaGender) {
-        return em.createQuery("SELECT e FROM gender e WHERE e.sigla_gender LIKE :siglaGender").setParameter("siglaGender", "%" + siglaGender + "%").getResultList();
+        return em.createQuery("SELECT e FROM Gender e WHERE e.siglaGender LIKE :siglaGender").setParameter("siglaGender", "%" + siglaGender + "%").getResultList();
     }
 
     public List<Gender> listInOrderSiglaGender() {
-        return em.createQuery("SELECT e FROM gender e ORDER BY e.sigla_gender").getResultList();
+        return em.createQuery("SELECT e FROM Gender e ORDER BY e.siglaGender").getResultList();
     }
 
     public List<Gender> listByFullGender(String fullGender) {
-        return em.createQuery("SELECT e FROM gender e WHERE e.full_gender LIKE :fullGender").setParameter("fullGender", "%" + fullGender + "%").getResultList();
+        return em.createQuery("SELECT e FROM Gender e WHERE e.fullGender LIKE :fullGender").setParameter("fullGender", "%" + fullGender + "%").getResultList();
     }
 
     public List<Gender> listInOrderFullGender() {
-        return em.createQuery("SELECT e FROM gender e ORDER BY e.full_gender").getResultList();
+        return em.createQuery("SELECT e FROM Gender e ORDER BY e.fullGender").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

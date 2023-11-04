@@ -11,7 +11,7 @@ public class DAOPlayer extends DAOGenerico<Player> {
     }
 
     public int autoIdPlayer() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.idPlayer) FROM playere ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.idPlayer) FROM Playere ").getSingleResult();
         if(a != null) {
             return a + 1;
         } else {
@@ -19,55 +19,55 @@ public class DAOPlayer extends DAOGenerico<Player> {
         }
     }
     public List<Player> listInOrderIdPlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.id_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.idPlayer").getResultList();
     }
 
     public List<Player> listByNamePlayer(String namePlayer) {
-        return em.createQuery("SELECT e FROM player e WHERE e.name_player LIKE :namePlayer").setParameter("namePlayer", "%" + namePlayer + "%").getResultList();
+        return em.createQuery("SELECT e FROM Player e WHERE e.namePlayer LIKE :namePlayer").setParameter("namePlayer", "%" + namePlayer + "%").getResultList();
     }
 
     public List<Player> listInOrderNamePlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.name_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.namePlayer").getResultList();
     }
 
     public List<Player> listInOrderPointsPlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.points_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.pointsPlayer").getResultList();
     }
 
     public List<Player> listInOrderBirthdayPlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.birthday_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.birthdayPlayer").getResultList();
     }
 
     public List<Player> listByFederationSiglaPlayer(String federationSiglaPlayer) {
-        return em.createQuery("SELECT e FROM player e WHERE e.federation_sigla_player LIKE :federationSiglaPlayer").setParameter("federationSiglaPlayer", "%" + federationSiglaPlayer + "%").getResultList();
+        return em.createQuery("SELECT e FROM Player e WHERE e.federationSiglaPlayer LIKE :federationSiglaPlayer").setParameter("federationSiglaPlayer", "%" + federationSiglaPlayer + "%").getResultList();
     }
 
     public List<Player> listInOrderFederationSiglaPlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.federation_sigla_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.federationSiglaPlayer").getResultList();
     }
 
     public List<Player> listByGenderSiglaPlayer(String genderSiglaPlayer) {
-        return em.createQuery("SELECT e FROM player e WHERE e.gender_sigla_player LIKE :genderSiglaPlayer").setParameter("genderSiglaPlayer", "%" + genderSiglaPlayer + "%").getResultList();
+        return em.createQuery("SELECT e FROM Player e WHERE e.genderSiglaPlayer LIKE :genderSiglaPlayer").setParameter("genderSiglaPlayer", "%" + genderSiglaPlayer + "%").getResultList();
     }
 
     public List<Player> listInOrderGenderSiglaPlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.gender_sigla_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.genderSiglaPlayer").getResultList();
     }
 
     public List<Player> listByTitleSiglaPlayer(String titleSiglaPlayer) {
-        return em.createQuery("SELECT e FROM player e WHERE e.title_sigla_player LIKE :titleSiglaPlayer").setParameter("titleSiglaPlayer", "%" + titleSiglaPlayer + "%").getResultList();
+        return em.createQuery("SELECT e FROM Player e WHERE e.titleSiglaPlayer LIKE :titleSiglaPlayer").setParameter("titleSiglaPlayer", "%" + titleSiglaPlayer + "%").getResultList();
     }
 
     public List<Player> listInOrderTitleSiglaPlayer() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.title_sigla_player").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.titleSiglaPlayer").getResultList();
     }
 
     public List<Player> listByProfilePictureUrl(String profilePictureUrl) {
-        return em.createQuery("SELECT e FROM player e WHERE e.profile_picture_url LIKE :profilePictureUrl").setParameter("profilePictureUrl", "%" + profilePictureUrl + "%").getResultList();
+        return em.createQuery("SELECT e FROM Player e WHERE e.profilePictureUrl LIKE :profilePictureUrl").setParameter("profilePictureUrl", "%" + profilePictureUrl + "%").getResultList();
     }
 
     public List<Player> listInOrderProfilePictureUrl() {
-        return em.createQuery("SELECT e FROM player e ORDER BY e.profile_picture_url").getResultList();
+        return em.createQuery("SELECT e FROM Player e ORDER BY e.profilePictureUrl").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

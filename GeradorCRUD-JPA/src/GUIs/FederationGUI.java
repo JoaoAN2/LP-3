@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
  /**
- * @author JoaoAN2 13/02/2023 - 19:19:17
+ * @author JoaoAN2 03/11/2023 - 19:44:33
  */
 
 public class FederationGUI extends JDialog {

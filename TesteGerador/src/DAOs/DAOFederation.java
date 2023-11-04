@@ -11,19 +11,19 @@ public class DAOFederation extends DAOGenerico<Federation> {
     }
 
     public List<Federation> listBySiglaFederation(String siglaFederation) {
-        return em.createQuery("SELECT e FROM federation e WHERE e.sigla_federation LIKE :siglaFederation").setParameter("siglaFederation", "%" + siglaFederation + "%").getResultList();
+        return em.createQuery("SELECT e FROM Federation e WHERE e.siglaFederation LIKE :siglaFederation").setParameter("siglaFederation", "%" + siglaFederation + "%").getResultList();
     }
 
     public List<Federation> listInOrderSiglaFederation() {
-        return em.createQuery("SELECT e FROM federation e ORDER BY e.sigla_federation").getResultList();
+        return em.createQuery("SELECT e FROM Federation e ORDER BY e.siglaFederation").getResultList();
     }
 
     public List<Federation> listByNameFederation(String nameFederation) {
-        return em.createQuery("SELECT e FROM federation e WHERE e.name_federation LIKE :nameFederation").setParameter("nameFederation", "%" + nameFederation + "%").getResultList();
+        return em.createQuery("SELECT e FROM Federation e WHERE e.nameFederation LIKE :nameFederation").setParameter("nameFederation", "%" + nameFederation + "%").getResultList();
     }
 
     public List<Federation> listInOrderNameFederation() {
-        return em.createQuery("SELECT e FROM federation e ORDER BY e.name_federation").getResultList();
+        return em.createQuery("SELECT e FROM Federation e ORDER BY e.nameFederation").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

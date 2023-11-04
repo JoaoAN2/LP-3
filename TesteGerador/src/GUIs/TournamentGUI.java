@@ -29,11 +29,11 @@ import javax.swing.JComboBox;
 import Tools.DateTools;
 
  /**
- * @author Usuário Teste 13/02/2023 - 20:04:49
+ * @author JoaoAN2 04/11/2023 - 14:13:47
  */
 
 public class TournamentGUI extends JDialog {
-    String action;    Color mainColor = new Color(102, 102, 0);
+    String action;    Color mainColor = new Color(102, 255, 255);
 
     Tournament tournament = new Tournament();
     DAOTournament daoTournament = new DAOTournament();

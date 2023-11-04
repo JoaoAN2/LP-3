@@ -11,19 +11,19 @@ public class DAOTitle extends DAOGenerico<Title> {
     }
 
     public List<Title> listBySiglaTitle(String siglaTitle) {
-        return em.createQuery("SELECT e FROM title e WHERE e.sigla_title LIKE :siglaTitle").setParameter("siglaTitle", "%" + siglaTitle + "%").getResultList();
+        return em.createQuery("SELECT e FROM Title e WHERE e.siglaTitle LIKE :siglaTitle").setParameter("siglaTitle", "%" + siglaTitle + "%").getResultList();
     }
 
     public List<Title> listInOrderSiglaTitle() {
-        return em.createQuery("SELECT e FROM title e ORDER BY e.sigla_title").getResultList();
+        return em.createQuery("SELECT e FROM Title e ORDER BY e.siglaTitle").getResultList();
     }
 
     public List<Title> listByNameTitle(String nameTitle) {
-        return em.createQuery("SELECT e FROM title e WHERE e.name_title LIKE :nameTitle").setParameter("nameTitle", "%" + nameTitle + "%").getResultList();
+        return em.createQuery("SELECT e FROM Title e WHERE e.nameTitle LIKE :nameTitle").setParameter("nameTitle", "%" + nameTitle + "%").getResultList();
     }
 
     public List<Title> listInOrderNameTitle() {
-        return em.createQuery("SELECT e FROM title e ORDER BY e.name_title").getResultList();
+        return em.createQuery("SELECT e FROM Title e ORDER BY e.nameTitle").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

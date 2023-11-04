@@ -1,6 +1,7 @@
 package Generators;
 
 import Entidades.Config;
+import Entidades.DatabaseManager;
 import Entidades.JDBC;
 import Entidades.Table;
 import Tools.ManipulaArquivo;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class UPGenerator {
 
-    public UPGenerator(JDBC jdbc, Config config) throws IOException {
+    public UPGenerator(List<Table> tables, JDBC jdbc, Config config) throws IOException {
         List<String> cg = new ArrayList();
         ManipulaArquivo manipulaArquivo = new ManipulaArquivo();
         StringTools st = new StringTools();
@@ -24,7 +25,7 @@ public class UPGenerator {
                 + "  <persistence-unit name=\"UP\" transaction-type=\"RESOURCE_LOCAL\">\n"
                 + "    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>");
 
-        for (Table table : jdbc.getTables()) {
+        for (Table table : tables) {
             if (table.isHasAttribute()) {
                 cg.add("    <class>Entidades." + st.firstLetterToUpperCase(table.getTableNameJava()) + "</class>");
             }

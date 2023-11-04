@@ -1,10 +1,14 @@
 package Entidades;
 
+import Tools.StringTools;
+
 /**
  *
  * @author JoaoAN2
  */
 public class Attribute {
+    
+    StringTools st = new StringTools();
 
     private String nameJava;
     private String typeJava;
@@ -54,6 +58,9 @@ public class Attribute {
     }
 
     public void setNameBD(String nameBD) {
+        setLabelName(st.labelJava(nameBD));
+        setNameJava(st.bdToJava(nameBD));
+        
         this.nameBD = nameBD;
     }
 
@@ -62,6 +69,9 @@ public class Attribute {
     }
 
     public void setTypeBD(String typeBD) {
+        setSize(st.sizeAttributes(typeBD));
+        setTypeJava(st.convertTypeBDToJava(typeBD));
+        
         this.typeBD = typeBD;
     }
 

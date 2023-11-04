@@ -11,19 +11,19 @@ public class DAOCatReferee extends DAOGenerico<CatReferee> {
     }
 
     public List<CatReferee> listBySiglaCatReferee(String siglaCatReferee) {
-        return em.createQuery("SELECT e FROM cat_referee e WHERE e.sigla_cat_referee LIKE :siglaCatReferee").setParameter("siglaCatReferee", "%" + siglaCatReferee + "%").getResultList();
+        return em.createQuery("SELECT e FROM CatReferee e WHERE e.siglaCatReferee LIKE :siglaCatReferee").setParameter("siglaCatReferee", "%" + siglaCatReferee + "%").getResultList();
     }
 
     public List<CatReferee> listInOrderSiglaCatReferee() {
-        return em.createQuery("SELECT e FROM cat_referee e ORDER BY e.sigla_cat_referee").getResultList();
+        return em.createQuery("SELECT e FROM CatReferee e ORDER BY e.siglaCatReferee").getResultList();
     }
 
     public List<CatReferee> listByNameCatReferee(String nameCatReferee) {
-        return em.createQuery("SELECT e FROM cat_referee e WHERE e.name_cat_referee LIKE :nameCatReferee").setParameter("nameCatReferee", "%" + nameCatReferee + "%").getResultList();
+        return em.createQuery("SELECT e FROM CatReferee e WHERE e.nameCatReferee LIKE :nameCatReferee").setParameter("nameCatReferee", "%" + nameCatReferee + "%").getResultList();
     }
 
     public List<CatReferee> listInOrderNameCatReferee() {
-        return em.createQuery("SELECT e FROM cat_referee e ORDER BY e.name_cat_referee").getResultList();
+        return em.createQuery("SELECT e FROM CatReferee e ORDER BY e.nameCatReferee").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

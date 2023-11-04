@@ -11,7 +11,7 @@ public class DAOCity extends DAOGenerico<City> {
     }
 
     public int autoIdCity() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.idCity) FROM citye ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.idCity) FROM Citye ").getSingleResult();
         if(a != null) {
             return a + 1;
         } else {
@@ -19,23 +19,23 @@ public class DAOCity extends DAOGenerico<City> {
         }
     }
     public List<City> listInOrderIdCity() {
-        return em.createQuery("SELECT e FROM city e ORDER BY e.id_city").getResultList();
+        return em.createQuery("SELECT e FROM City e ORDER BY e.idCity").getResultList();
     }
 
     public List<City> listByNameCity(String nameCity) {
-        return em.createQuery("SELECT e FROM city e WHERE e.name_city LIKE :nameCity").setParameter("nameCity", "%" + nameCity + "%").getResultList();
+        return em.createQuery("SELECT e FROM City e WHERE e.nameCity LIKE :nameCity").setParameter("nameCity", "%" + nameCity + "%").getResultList();
     }
 
     public List<City> listInOrderNameCity() {
-        return em.createQuery("SELECT e FROM city e ORDER BY e.name_city").getResultList();
+        return em.createQuery("SELECT e FROM City e ORDER BY e.nameCity").getResultList();
     }
 
     public List<City> listByStateSiglaCity(String stateSiglaCity) {
-        return em.createQuery("SELECT e FROM city e WHERE e.state_sigla_city LIKE :stateSiglaCity").setParameter("stateSiglaCity", "%" + stateSiglaCity + "%").getResultList();
+        return em.createQuery("SELECT e FROM City e WHERE e.stateSiglaCity LIKE :stateSiglaCity").setParameter("stateSiglaCity", "%" + stateSiglaCity + "%").getResultList();
     }
 
     public List<City> listInOrderStateSiglaCity() {
-        return em.createQuery("SELECT e FROM city e ORDER BY e.state_sigla_city").getResultList();
+        return em.createQuery("SELECT e FROM City e ORDER BY e.stateSiglaCity").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

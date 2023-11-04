@@ -11,27 +11,27 @@ public class DAOState extends DAOGenerico<State> {
     }
 
     public List<State> listBySiglaState(String siglaState) {
-        return em.createQuery("SELECT e FROM state e WHERE e.sigla_state LIKE :siglaState").setParameter("siglaState", "%" + siglaState + "%").getResultList();
+        return em.createQuery("SELECT e FROM State e WHERE e.siglaState LIKE :siglaState").setParameter("siglaState", "%" + siglaState + "%").getResultList();
     }
 
     public List<State> listInOrderSiglaState() {
-        return em.createQuery("SELECT e FROM state e ORDER BY e.sigla_state").getResultList();
+        return em.createQuery("SELECT e FROM State e ORDER BY e.siglaState").getResultList();
     }
 
     public List<State> listByNameState(String nameState) {
-        return em.createQuery("SELECT e FROM state e WHERE e.name_state LIKE :nameState").setParameter("nameState", "%" + nameState + "%").getResultList();
+        return em.createQuery("SELECT e FROM State e WHERE e.nameState LIKE :nameState").setParameter("nameState", "%" + nameState + "%").getResultList();
     }
 
     public List<State> listInOrderNameState() {
-        return em.createQuery("SELECT e FROM state e ORDER BY e.name_state").getResultList();
+        return em.createQuery("SELECT e FROM State e ORDER BY e.nameState").getResultList();
     }
 
     public List<State> listByFederationIdState(String federationIdState) {
-        return em.createQuery("SELECT e FROM state e WHERE e.federation_id_state LIKE :federationIdState").setParameter("federationIdState", "%" + federationIdState + "%").getResultList();
+        return em.createQuery("SELECT e FROM State e WHERE e.federationIdState LIKE :federationIdState").setParameter("federationIdState", "%" + federationIdState + "%").getResultList();
     }
 
     public List<State> listInOrderFederationIdState() {
-        return em.createQuery("SELECT e FROM state e ORDER BY e.federation_id_state").getResultList();
+        return em.createQuery("SELECT e FROM State e ORDER BY e.federationIdState").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

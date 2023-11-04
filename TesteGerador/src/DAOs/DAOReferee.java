@@ -11,7 +11,7 @@ public class DAOReferee extends DAOGenerico<Referee> {
     }
 
     public int autoIdReferee() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.playerIdPlayer) FROM refereee ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.playerIdPlayer) FROM Refereee ").getSingleResult();
         if(a != null) {
             return a + 1;
         } else {
@@ -19,15 +19,15 @@ public class DAOReferee extends DAOGenerico<Referee> {
         }
     }
     public List<Referee> listInOrderPlayerIdPlayer() {
-        return em.createQuery("SELECT e FROM referee e ORDER BY e.player_id_player").getResultList();
+        return em.createQuery("SELECT e FROM Referee e ORDER BY e.playerIdPlayer").getResultList();
     }
 
     public List<Referee> listByCatRefereeIdReferee(String catRefereeIdReferee) {
-        return em.createQuery("SELECT e FROM referee e WHERE e.cat_referee_id_referee LIKE :catRefereeIdReferee").setParameter("catRefereeIdReferee", "%" + catRefereeIdReferee + "%").getResultList();
+        return em.createQuery("SELECT e FROM Referee e WHERE e.catRefereeIdReferee LIKE :catRefereeIdReferee").setParameter("catRefereeIdReferee", "%" + catRefereeIdReferee + "%").getResultList();
     }
 
     public List<Referee> listInOrderCatRefereeIdReferee() {
-        return em.createQuery("SELECT e FROM referee e ORDER BY e.cat_referee_id_referee").getResultList();
+        return em.createQuery("SELECT e FROM Referee e ORDER BY e.catRefereeIdReferee").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

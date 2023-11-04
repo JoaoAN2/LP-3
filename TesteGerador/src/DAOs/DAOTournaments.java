@@ -16,7 +16,7 @@ public class DAOTournaments extends DAOGenerico<Tournaments> {
     }
 
     public int autoIdTournaments() {
-        Integer a = (Integer) em.createQuery("SELECT MAX(e.tournamentsIdTournament) FROM tournamentse ").getSingleResult();
+        Integer a = (Integer) em.createQuery("SELECT MAX(e.tournamentsIdTournament) FROM Tournamentse ").getSingleResult();
         if(a != null) {
             return a + 1;
         } else {
@@ -24,19 +24,19 @@ public class DAOTournaments extends DAOGenerico<Tournaments> {
         }
     }
     public List<Tournaments> listInOrderTournamentsIdTournament() {
-        return em.createQuery("SELECT e FROM tournaments e ORDER BY e.tournaments_id_tournament").getResultList();
+        return em.createQuery("SELECT e FROM Tournaments e ORDER BY e.tournamentsIdTournament").getResultList();
     }
 
     public List<Tournaments> listInOrderTournamentsIdPlayer() {
-        return em.createQuery("SELECT e FROM tournaments e ORDER BY e.tournaments_id_player").getResultList();
+        return em.createQuery("SELECT e FROM Tournaments e ORDER BY e.tournamentsIdPlayer").getResultList();
     }
 
     public List<Tournaments> listInOrderPositionPlayer() {
-        return em.createQuery("SELECT e FROM tournaments e ORDER BY e.position_player").getResultList();
+        return em.createQuery("SELECT e FROM Tournaments e ORDER BY e.positionPlayer").getResultList();
     }
 
     public List<Tournaments> listInOrderPointsPlayer() {
-        return em.createQuery("SELECT e FROM tournaments e ORDER BY e.points_player").getResultList();
+        return em.createQuery("SELECT e FROM Tournaments e ORDER BY e.pointsPlayer").getResultList();
     }
 
     public List<String> listInOrderString(String order) {

@@ -30,11 +30,11 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
  /**
- * @author Usuário Teste 13/02/2023 - 20:04:49
+ * @author JoaoAN2 04/11/2023 - 14:13:47
  */
 
 public class RefereeGUI extends JDialog {
-    String action;    Color mainColor = new Color(102, 102, 0);
+    String action;    Color mainColor = new Color(102, 255, 255);
 
     Referee referee = new Referee();
     DAOReferee daoReferee = new DAOReferee();

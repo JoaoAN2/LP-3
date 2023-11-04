@@ -24,11 +24,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
  /**
- * @author Usuário Teste 13/02/2023 - 20:04:49
+ * @author JoaoAN2 04/11/2023 - 14:13:46
  */
 
 public class CatRefereeGUI extends JDialog {
-    String action;    Color mainColor = new Color(102, 102, 0);
+    String action;    Color mainColor = new Color(102, 255, 255);
 
     CatReferee catReferee = new CatReferee();
     DAOCatReferee daoCatReferee = new DAOCatReferee();

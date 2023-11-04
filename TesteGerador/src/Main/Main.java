@@ -4,7 +4,7 @@ import GUIs.GUIMenu;
 
 /**
  *
- * @author tovo
+ * @author JoaoAN2
  */
 public class Main {
 
@@ -14,5 +14,5 @@ public class Main {
     public static void main(String[] args) {
         GUIMenu guiMenu = new GUIMenu();
     }
-   
+    
 }
